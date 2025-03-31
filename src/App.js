@@ -4,6 +4,7 @@ import React from 'react';
 import './App.css';
 import Navbar from './component/Navbar'; 
 import MainPage from './pages/mainpage';
+import Login from './pages/login';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
       <Navbar /> {}
       
       <div className="content">
-      <MainPage /> {}
+      <Login /> {}
         
       </div>
     </div>
