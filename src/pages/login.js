@@ -9,8 +9,10 @@ const Login = ({ setPage }) => {
 
     if (role === 'user') {
       // authenticate sign in as user
+      // if authentication works, then -> setPage('mainpageuser')
     } else if (role === 'employee') {
       // authenticate sign in as employee
+      // if authentication works, then -> setPage('mainpageemployee')
     }
   };
   
