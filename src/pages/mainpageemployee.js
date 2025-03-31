@@ -9,96 +9,9 @@ const MainPage = () => {
   const [customers, setCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    // Fetch hotel chains
-    axios.get('/api/hotelChains')
-      .then(response => setHotelChains(response.data))
-      .catch(error => console.log(error));
-
-    // Fetch hotels based on search query (could be hotel name, category, etc.)
-    if (searchQuery) {
-      axios.get(`/api/hotels/search?query=${searchQuery}`)
-        .then(response => setHotels(response.data))
-        .catch(error => console.log(error));
-    } else {
-      axios.get('/api/hotels')
-        .then(response => setHotels(response.data))
-        .catch(error => console.log(error));
-    }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    // Fetch rooms for the first hotel chain or selected hotel
-    if (hotels.length > 0) {
-      axios.get(`/api/rooms?hotelId=${hotels[0].Hotel_ID}`)
-        .then(response => setRooms(response.data))
-        .catch(error => console.log(error));
-    }
-  }, [hotels]);
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
 
   return (
     <div>
-      <h1>Hotel Booking System</h1>
-
-      {/* Search bar */}
-      <input
-        type="text"
-        placeholder="Search for hotels or chains..."
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
-
-      {/* List of Hotel Chains */}
-      <h2>Hotel Chains</h2>
-      <ul>
-        {hotelChains.map((chain) => (
-          <li key={chain.Hotel_chain_ID}>
-            {chain.Address} - {chain.Num_hotels} Hotels
-          </li>
-        ))}
-      </ul>
-
-      {/* List of Hotels */}
-      <h2>Hotels</h2>
-      <ul>
-        {hotels.map((hotel) => (
-          <li key={hotel.Hotel_ID}>
-            <h3>{hotel.Email} - {hotel.Category}</h3>
-            <p>{hotel.Phone}</p>
-            <button onClick={() => {}}>View Rooms</button>
-          </li>
-        ))}
-      </ul>
-
-      {/* List of Rooms in the Selected Hotel */}
-      <h2>Rooms</h2>
-      <ul>
-        {rooms.map((room) => (
-          <li key={room.Room_ID}>
-            <p>Room {room.Room_ID}</p>
-            <p>Price: ${room.Price}</p>
-            <p>Amenities: {room.Amenity}</p>
-            <p>Capacity: {room.Capacity}</p>
-            <p>View: {room.View}</p>
-            <p>Extension: {room.Extension ? 'Yes' : 'No'}</p>
-            <p>Damage: {room.Damage ? 'Yes' : 'No'}</p>
-          </li>
-        ))}
-      </ul>
-
-      {/* Customer Interaction */}
-      <h2>Customer Registration</h2>
-      <form>
-        <input type="text" placeholder="Full Name" />
-        <input type="text" placeholder="Address" />
-        <input type="date" placeholder="Registration Date" />
-        <button>Register</button>
-      </form>
-
       {/* Booking Section */}
       <h2>Make a Booking</h2>
       <form>
