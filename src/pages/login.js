@@ -4,9 +4,16 @@ import './css/login.css';
 const Login = ({ setPage }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const handleSubmit = (e) => {
-    //DO SOMETHING
+  const handleSubmit = (e, role) => {
+    e.preventDefault(); // Prevent default page reload
+
+    if (role === 'user') {
+      // authenticate sign in as user
+    } else if (role === 'employee') {
+      // authenticate sign in as employee
+    }
   };
+  
 
   return (
     <div className="login-container">
@@ -18,9 +25,14 @@ const Login = ({ setPage }) => {
         <label>Password:</label>
         <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-        <form className="login-form" onSubmit={handleSubmit}>
-         <button type="submit" className="login-btn">Login</button>
-        </form>
+        <button type="button" onClick={(e) => handleSubmit(e, 'user')} className="login-btn">
+          Login
+        </button>
+
+        <button type="button" onClick={(e) => handleSubmit(e, 'employee')} className="login-btn">
+          Login as Employee
+        </button>
+
         <p>
           Don't have an account?{' '}
           <button type="button" onClick={() => setPage('register')} className="signup-link">
