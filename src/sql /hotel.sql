@@ -86,12 +86,12 @@ CREATE TABLE IF NOT EXISTS public.Employee (
 DROP TABLE IF EXISTS public.Customer CASCADE;
 -- Create Customer table
 CREATE TABLE IF NOT EXISTS public.Customer (
-    Cust_ID INT PRIMARY KEY,
+   Cust_ID INT PRIMARY KEY,
     Full_Name VARCHAR(255),
-    Email VARCHAR(255) UNIQUE NOT NULL, -- New column for email
-    Password VARCHAR(255) NOT NULL, -- New column for password
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     Address VARCHAR(255),
-    Date_reg DATE CHECK (Date_reg <= CURRENT_DATE)
+    Date_reg DATE DEFAULT CURRENT_DATE CHECK (Date_reg <= CURRENT_DATE)
 );
 
 DROP TABLE IF EXISTS public.Booking Cascade;
@@ -383,6 +383,10 @@ VALUES
 (106, 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco', '2024-03-22'),
 (107, 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle', '2024-03-25'),
 (108, 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston', '2024-03-28');
+
+INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address)
+VALUES
+(110, 'Test2','test2@gmail.com','pw2','');
 
 select* from room;
 Delete From public.Booking;
