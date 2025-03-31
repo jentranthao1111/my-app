@@ -73,20 +73,50 @@ CREATE TABLE IF NOT EXISTS public.Room (
 
 DROP TABLE IF EXISTS public.Employee CASCADE;
 -- Create Employee table
+
+--Drop the sequence
+DROP SEQUENCE IF EXISTS employee_id_seq CASCADE;
+
+-- Create a sequence for automatic employee numbering
+CREATE SEQUENCE employee_id_seq START 0001;
+
 CREATE TABLE IF NOT EXISTS public.Employee (
-    SSN_SID VARCHAR(20) PRIMARY KEY,
+    SSN_SID VARCHAR(20) PRIMARY KEY DEFAULT 'E000' || nextval('employee_id_seq'),
     Role VARCHAR(50) CHECK (Role IN ('Manager', 'Receptionist', 'Cleaner')),
     FullName VARCHAR(255),
-    Email VARCHAR(255) UNIQUE NOT NULL, -- New column for email
-    Password VARCHAR(255) NOT NULL, -- New column for password
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     Hotel_FID INT,
     FOREIGN KEY (Hotel_FID) REFERENCES public.Hotel(Hotel_ID)
 );
 
+Delete from public.Employee;
+-- Insert data into Employee table
+INSERT INTO public.Employee ( Role, FullName, Email, Password, Hotel_FID)
+VALUES
+( 'Manager', 'Alice Johnson', 'alice.johnson@hotel.com', 'securePass1', 17),
+( 'Receptionist', 'Bob Smith', 'bob.smith@hotel.com', 'securePass2', 25),
+( 'Cleaner', 'Charlie Brown', 'charlie.brown@hotel.com', 'securePass3', 33),
+( 'Manager', 'Diana Ross', 'diana.ross@hotel.com', 'securePass4', 1),
+( 'Receptionist', 'Ethan Hunt', 'ethan.hunt@hotel.com', 'securePass5', 9),
+( 'Cleaner', 'Fiona Blake', 'fiona.blake@hotel.com', 'securePass6', 6),
+( 'Manager', 'George Miller', 'george.miller@hotel.com', 'securePass7', 11),
+( 'Receptionist', 'Hannah Davis', 'hannah.davis@hotel.com', 'securePass8', 19);
+
+Select * from public.employee;
+
+
 DROP TABLE IF EXISTS public.Customer CASCADE;
+
+--Drop the sequence
+DROP SEQUENCE IF EXISTS cust_id_seq CASCADE;
+
+-- Create a sequence for automatic employee numbering
+CREATE SEQUENCE cust_id_seq START 00001;
+
 -- Create Customer table
 CREATE TABLE IF NOT EXISTS public.Customer (
-   Cust_ID INT PRIMARY KEY,
+   Cust_ID VARCHAR(20) PRIMARY KEY DEFAULT 'CU000' || nextval('cust_id_seq'),
     Full_Name VARCHAR(255),
     Email VARCHAR(255) UNIQUE NOT NULL,
     Password VARCHAR(255) NOT NULL,
@@ -94,14 +124,31 @@ CREATE TABLE IF NOT EXISTS public.Customer (
     Date_reg DATE DEFAULT CURRENT_DATE CHECK (Date_reg <= CURRENT_DATE)
 );
 
+Delete From public.Customer;
+-- Insert data into Customer table
+INSERT INTO public.Customer ( Full_Name, Email, Password, Address)
+VALUES
+( 'John Doe', 'john.doe@email.com', 'password123', '123 Main St, New York'),
+( 'Emma Watson', 'emma.watson@email.com', 'mypassword', '456 Elm St, Los Angeles'),
+( 'Liam Smith', 'liam.smith@email.com', 'liamPass99', '789 Pine St, Chicago'),
+( 'Sophia Brown', 'sophia.brown@email.com', 'sophiaSecret', '101 Maple St, Miami'),
+( 'Michael Johnson', 'michael.johnson@email.com', 'michael2024', '222 Oak St, Houston'),
+( 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco'),
+( 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle'),
+( 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston');
+
+Select * from public.customer;
+
 DROP TABLE IF EXISTS public.Booking Cascade;
+Drop sequence if exists booking_id_seq Cascade;
+create sequence booking_id_seq start 001;
 -- Create Booking table
 CREATE TABLE IF NOT EXISTS public.Booking (
-    Booking_ID INT PRIMARY KEY,
+    Booking_ID VARCHAR PRIMARY KEY DEFAULT 'BK000' || nextval('booking_id_seq'),
     CheckInDate DATE,
     CheckOutDate DATE CHECK (CheckInDate < CheckOutDate),
     Status VARCHAR(20) CHECK (Status IN ('Pending', 'Confirmed', 'Cancelled')),
-    Cust_ID INT,
+    Cust_ID VARCHAR,
     Room_ID INT,
     Hotel_ID INT,
     FOREIGN KEY (Cust_ID) REFERENCES public.Customer(Cust_ID),
@@ -109,20 +156,35 @@ CREATE TABLE IF NOT EXISTS public.Booking (
     FOREIGN KEY (Hotel_ID) REFERENCES public.Hotel(Hotel_ID)
 );
 
+Delete From public.Booking;
+-- Insert data into Booking table
+INSERT INTO public.Booking (CheckInDate, CheckOutDate, Status, Cust_ID, Room_ID, Hotel_ID)
+VALUES
+    ( '2025-04-05', '2025-04-10', 'Confirmed', 'CU0001', 301, 17),
+    ( '2025-04-06', '2025-04-09', 'Pending', 'CU0002', 401, 25),
+    ( '2025-04-07', '2025-04-12', 'Confirmed', 'CU0003', 501, 33),
+    ('2025-04-08', '2025-04-11', 'Cancelled', 'CU0004', 101, 1),
+    ( '2025-04-10', '2025-04-14', 'Confirmed', 'CU0005', 201, 9),
+    ( '2025-04-11', '2025-04-16', 'Pending', 'CU0006', 102, 1),
+    ( '2025-04-12', '2025-04-15', 'Confirmed', 'CU0007', 202, 9),
+    ( '2025-04-13', '2025-04-18', 'Cancelled', 'CU0008', 302, 17);
 
-
+Select * from booking;
 
 DROP TABLE IF EXISTS public.Renting Cascade;
+Drop sequence if exists renting_id_seq cascade;
+Create sequence renting_id_seq start 1;
+
 
 -- Create Renting table
 CREATE TABLE IF NOT EXISTS public.Renting (
-    Renting_ID INT PRIMARY KEY,
+    Renting_ID Varchar PRIMARY KEY default 'RNT000' || Nextval('renting_id_seq'),
     StartDate DATE,
     EndDate DATE,
     Status VARCHAR(20) CHECK (Status IN ('Ongoing', 'Completed', 'Cancelled')),
     Payment DECIMAL(10, 2) CHECK (Payment > 0 OR Status = 'Cancelled'),
     Employ_SID VARCHAR(20),
-    Cust_ID INT,
+    Cust_ID VARCHAR(20),
     Room_ID INT,
     Hotel_ID INT,
     FOREIGN KEY (Employ_SID) REFERENCES public.Employee(SSN_SID),
@@ -131,6 +193,19 @@ CREATE TABLE IF NOT EXISTS public.Renting (
     FOREIGN KEY (Hotel_ID) REFERENCES public.Hotel(Hotel_ID)
 );
 
+Delete From public.Renting;
+-- Insert data into Renting table
+INSERT INTO public.Renting ( StartDate, EndDate, Status, Payment, Employ_SID, Cust_ID, Room_ID, Hotel_ID)
+VALUES
+    ( '2025-04-01', '2025-04-05', 'Completed', 500, 'E0001', 'CU0001', 305, 17),
+    ( '2025-04-02', '2025-04-06', 'Ongoing', 650, 'E0002', 'CU0002', 405, 25),
+    ( '2025-04-03', '2025-04-07', 'Completed', 700, 'E0003', 'CU0003', 505, 33),
+    ( '2025-04-04', '2025-04-08', 'Cancelled', 0, 'E0004', 'CU0004', 105, 1),
+    ( '2025-04-05', '2025-04-09', 'Completed', 550, 'E0005', 'CU0005', 205, 9),
+    ('2025-04-06', '2025-04-10', 'Ongoing', 600, 'E0006', 'CU0006', 145, 6),
+    ( '2025-04-07', '2025-04-11', 'Completed', 750, 'E0007', 'CU0007', 275, 11),
+    ( '2025-04-08', '2025-04-12', 'Ongoing', 800, 'E0008', 'CU0008', 385, 19);
+Select * from public.renting;
 
 
 DROP TABLE IF EXISTS public.Works_for Cascade;
@@ -357,63 +432,38 @@ VALUES
 (5, 36, 515, 500, 'WiFi, Mini Bar, Jacuzzi', 5, 'Forest View', 'Yes', 'No');
 
 
-Delete from public.Employee;
+-- Delete from public.Employee;
+-- -- Insert data into Employee table
+-- INSERT INTO public.Employee (SSN_SID, Role, FullName, Email, Password, Hotel_FID)
+-- VALUES
+-- ('E001', 'Manager', 'Alice Johnson', 'alice.johnson@hotel.com', 'securePass1', 1),
+-- ('E002', 'Receptionist', 'Bob Smith', 'bob.smith@hotel.com', 'securePass2', 1),
+-- ('E003', 'Cleaner', 'Charlie Brown', 'charlie.brown@hotel.com', 'securePass3', 2),
+-- ('E004', 'Manager', 'Diana Ross', 'diana.ross@hotel.com', 'securePass4', 3),
+-- ('E005', 'Receptionist', 'Ethan Hunt', 'ethan.hunt@hotel.com', 'securePass5', 4),
+-- ('E006', 'Cleaner', 'Fiona Blake', 'fiona.blake@hotel.com', 'securePass6', 5),
+-- ('E007', 'Manager', 'George Miller', 'george.miller@hotel.com', 'securePass7', 6),
+-- ('E008', 'Receptionist', 'Hannah Davis', 'hannah.davis@hotel.com', 'securePass8', 7);
 
--- Insert data into Employee table
-INSERT INTO public.Employee (SSN_SID, Role, FullName, Email, Password, Hotel_FID)
-VALUES
-('E001', 'Manager', 'Alice Johnson', 'alice.johnson@hotel.com', 'securePass1', 1),
-('E002', 'Receptionist', 'Bob Smith', 'bob.smith@hotel.com', 'securePass2', 1),
-('E003', 'Cleaner', 'Charlie Brown', 'charlie.brown@hotel.com', 'securePass3', 2),
-('E004', 'Manager', 'Diana Ross', 'diana.ross@hotel.com', 'securePass4', 3),
-('E005', 'Receptionist', 'Ethan Hunt', 'ethan.hunt@hotel.com', 'securePass5', 4),
-('E006', 'Cleaner', 'Fiona Blake', 'fiona.blake@hotel.com', 'securePass6', 5),
-('E007', 'Manager', 'George Miller', 'george.miller@hotel.com', 'securePass7', 6),
-('E008', 'Receptionist', 'Hannah Davis', 'hannah.davis@hotel.com', 'securePass8', 7);
+-- Delete From public.Customer;
+-- -- Insert data into Customer table
+-- INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address, Date_reg)
+-- VALUES
+-- (101, 'John Doe', 'john.doe@email.com', 'password123', '123 Main St, New York', '2024-03-01'),
+-- (102, 'Emma Watson', 'emma.watson@email.com', 'mypassword', '456 Elm St, Los Angeles', '2024-03-05'),
+-- (103, 'Liam Smith', 'liam.smith@email.com', 'liamPass99', '789 Pine St, Chicago', '2024-03-10'),
+-- (104, 'Sophia Brown', 'sophia.brown@email.com', 'sophiaSecret', '101 Maple St, Miami', '2024-03-15'),
+-- (105, 'Michael Johnson', 'michael.johnson@email.com', 'michael2024', '222 Oak St, Houston', '2024-03-20'),
+-- (106, 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco', '2024-03-22'),
+-- (107, 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle', '2024-03-25'),
+-- (108, 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston', '2024-03-28');
 
-Delete From public.Customer;
--- Insert data into Customer table
-INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address, Date_reg)
-VALUES
-(101, 'John Doe', 'john.doe@email.com', 'password123', '123 Main St, New York', '2024-03-01'),
-(102, 'Emma Watson', 'emma.watson@email.com', 'mypassword', '456 Elm St, Los Angeles', '2024-03-05'),
-(103, 'Liam Smith', 'liam.smith@email.com', 'liamPass99', '789 Pine St, Chicago', '2024-03-10'),
-(104, 'Sophia Brown', 'sophia.brown@email.com', 'sophiaSecret', '101 Maple St, Miami', '2024-03-15'),
-(105, 'Michael Johnson', 'michael.johnson@email.com', 'michael2024', '222 Oak St, Houston', '2024-03-20'),
-(106, 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco', '2024-03-22'),
-(107, 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle', '2024-03-25'),
-(108, 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston', '2024-03-28');
+-- INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address)
+-- VALUES
+-- (110, 'Test2','test2@gmail.com','pw2','');
 
-INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address)
-VALUES
-(110, 'Test2','test2@gmail.com','pw2','');
 
-select* from room;
-Delete From public.Booking;
--- Insert data into Booking table
-INSERT INTO public.Booking (Booking_ID, CheckInDate, CheckOutDate, Status, Cust_ID, Room_ID, Hotel_ID)
-VALUES
-    (1, '2025-04-05', '2025-04-10', 'Confirmed', 101, 301, 17),
-    (2, '2025-04-06', '2025-04-09', 'Pending', 102, 401, 25),
-    (3, '2025-04-07', '2025-04-12', 'Confirmed', 103, 501, 33),
-    (4, '2025-04-08', '2025-04-11', 'Cancelled', 104, 101, 1),
-    (5, '2025-04-10', '2025-04-14', 'Confirmed', 105, 201, 9),
-    (6, '2025-04-11', '2025-04-16', 'Pending', 106, 102, 1),
-    (7, '2025-04-12', '2025-04-15', 'Confirmed', 107, 202, 9),
-    (8, '2025-04-13', '2025-04-18', 'Cancelled', 108, 302, 17);
 
-Delete From public.Renting;
--- Insert data into Renting table
-INSERT INTO public.Renting (Renting_ID, StartDate, EndDate, Status, Payment, Employ_SID, Cust_ID, Room_ID, Hotel_ID)
-VALUES
-    (1, '2025-04-01', '2025-04-05', 'Completed', 500, 'E001', 101, 305, 17),
-    (2, '2025-04-02', '2025-04-06', 'Ongoing', 650, 'E002', 102, 405, 25),
-    (3, '2025-04-03', '2025-04-07', 'Completed', 700, 'E003', 103, 505, 33),
-    (4, '2025-04-04', '2025-04-08', 'Cancelled', 0, 'E004', 104, 105, 1),
-    (5, '2025-04-05', '2025-04-09', 'Completed', 550, 'E005', 105, 205, 9),
-    (6, '2025-04-06', '2025-04-10', 'Ongoing', 600, 'E006', 106, 145, 6),
-    (7, '2025-04-07', '2025-04-11', 'Completed', 750, 'E007', 107, 275, 11),
-    (8, '2025-04-08', '2025-04-12', 'Ongoing', 800, 'E008', 108, 385, 19);
 
 	
 -- CREATE VIEW public.AvailableRoomsPerArea AS
