@@ -4,11 +4,12 @@ FROM Employee
 WHERE role = 'Manager';
 
 
--- Query 2: Get all bookings with customer names
-SELECT B.booking_id, C.full_name, R.RoomType, B.checkindate, B.checkoutdate
-FROM booking B
+-- Query 2: Get all bookings with customer and room details
+SELECT B.booking_id, C.full_name AS customer_name, R.room_id, R.amenity, R.view, B.checkindate AS checkin_date, B.checkoutdate
+FROM Booking B
 JOIN customer C ON B.cust_id = C.cust_id
-JOIN room R ON B.room_id = R.room_id;
+JOIN Room R ON B.room_id = R.room_id;
+
 
 -- Query 3: List all employees working at a specific hotel
 SELECT E.fullname, E.role, H.hotel_name
