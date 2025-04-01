@@ -53,7 +53,7 @@ const Login = ({ setPage }) => {
       <h2>Login</h2>
       <form className="login-form">
         <label>Username:</label>
-        <input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="text" placeholder="Enter your email" value={username} onChange={(e) => setUsername(e.target.value)} />
 
         <label>Password:</label>
         <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
