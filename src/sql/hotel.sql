@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS public.Hotel (
     Hotel_ID INT PRIMARY KEY,
 	Hotel_Name Varchar(255),
     Hotel_chain_ID INT,
-    Address VARCHAR(255),  -- New column for address
-    City VARCHAR(100),      -- New column for city
+    Address VARCHAR(255), 
+    City VARCHAR(100),    
     Email VARCHAR(255),
     Num_rooms INT CHECK (Num_rooms >= 1),
     Category VARCHAR(50),
@@ -90,20 +90,7 @@ CREATE TABLE IF NOT EXISTS public.Employee (
     FOREIGN KEY (Hotel_FID) REFERENCES public.Hotel(Hotel_ID)
 );
 
-Delete from public.Employee;
--- Insert data into Employee table
-INSERT INTO public.Employee ( Role, FullName, Email, Password, Hotel_FID)
-VALUES
-( 'Manager', 'Alice Johnson', 'alice.johnson@hotel.com', 'securePass1', 17),
-( 'Receptionist', 'Bob Smith', 'bob.smith@hotel.com', 'securePass2', 25),
-( 'Cleaner', 'Charlie Brown', 'charlie.brown@hotel.com', 'securePass3', 33),
-( 'Manager', 'Diana Ross', 'diana.ross@hotel.com', 'securePass4', 1),
-( 'Receptionist', 'Ethan Hunt', 'ethan.hunt@hotel.com', 'securePass5', 9),
-( 'Cleaner', 'Fiona Blake', 'fiona.blake@hotel.com', 'securePass6', 6),
-( 'Manager', 'George Miller', 'george.miller@hotel.com', 'securePass7', 11),
-( 'Receptionist', 'Hannah Davis', 'hannah.davis@hotel.com', 'securePass8', 19);
 
-Select * from public.employee;
 
 
 DROP TABLE IF EXISTS public.Customer CASCADE;
@@ -124,18 +111,6 @@ CREATE TABLE IF NOT EXISTS public.Customer (
     Date_reg DATE DEFAULT CURRENT_DATE CHECK (Date_reg <= CURRENT_DATE)
 );
 
-Delete From public.Customer;
--- Insert data into Customer table
-INSERT INTO public.Customer ( Full_Name, Email, Password, Address)
-VALUES
-( 'John Doe', 'john.doe@email.com', 'password123', '123 Main St, New York'),
-( 'Emma Watson', 'emma.watson@email.com', 'mypassword', '456 Elm St, Los Angeles'),
-( 'Liam Smith', 'liam.smith@email.com', 'liamPass99', '789 Pine St, Chicago'),
-( 'Sophia Brown', 'sophia.brown@email.com', 'sophiaSecret', '101 Maple St, Miami'),
-( 'Michael Johnson', 'michael.johnson@email.com', 'michael2024', '222 Oak St, Houston'),
-( 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco'),
-( 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle'),
-( 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston');
 
 Select * from public.customer;
 
@@ -156,20 +131,7 @@ CREATE TABLE IF NOT EXISTS public.Booking (
     FOREIGN KEY (Hotel_ID) REFERENCES public.Hotel(Hotel_ID)
 );
 
-Delete From public.Booking;
--- Insert data into Booking table
-INSERT INTO public.Booking (CheckInDate, CheckOutDate, Status, Cust_ID, Room_ID, Hotel_ID)
-VALUES
-    ( '2025-04-05', '2025-04-10', 'Confirmed', 'CU0001', 301, 17),
-    ( '2025-04-06', '2025-04-09', 'Pending', 'CU0002', 401, 25),
-    ( '2025-04-07', '2025-04-12', 'Confirmed', 'CU0003', 501, 33),
-    ('2025-04-08', '2025-04-11', 'Cancelled', 'CU0004', 101, 1),
-    ( '2025-04-10', '2025-04-14', 'Confirmed', 'CU0005', 201, 9),
-    ( '2025-04-11', '2025-04-16', 'Pending', 'CU0006', 102, 1),
-    ( '2025-04-12', '2025-04-15', 'Confirmed', 'CU0007', 202, 9),
-    ( '2025-04-13', '2025-04-18', 'Cancelled', 'CU0008', 302, 17);
 
-Select * from booking;
 
 DROP TABLE IF EXISTS public.Renting Cascade;
 Drop sequence if exists renting_id_seq cascade;
@@ -193,19 +155,6 @@ CREATE TABLE IF NOT EXISTS public.Renting (
     FOREIGN KEY (Hotel_ID) REFERENCES public.Hotel(Hotel_ID)
 );
 
-Delete From public.Renting;
--- Insert data into Renting table
-INSERT INTO public.Renting ( StartDate, EndDate, Status, Payment, Employ_SID, Cust_ID, Room_ID, Hotel_ID)
-VALUES
-    ( '2025-04-01', '2025-04-05', 'Completed', 500, 'E0001', 'CU0001', 305, 17),
-    ( '2025-04-02', '2025-04-06', 'Ongoing', 650, 'E0002', 'CU0002', 405, 25),
-    ( '2025-04-03', '2025-04-07', 'Completed', 700, 'E0003', 'CU0003', 505, 33),
-    ( '2025-04-04', '2025-04-08', 'Cancelled', 0, 'E0004', 'CU0004', 105, 1),
-    ( '2025-04-05', '2025-04-09', 'Completed', 550, 'E0005', 'CU0005', 205, 9),
-    ('2025-04-06', '2025-04-10', 'Ongoing', 600, 'E0006', 'CU0006', 145, 6),
-    ( '2025-04-07', '2025-04-11', 'Completed', 750, 'E0007', 'CU0007', 275, 11),
-    ( '2025-04-08', '2025-04-12', 'Ongoing', 800, 'E0008', 'CU0008', 385, 19);
-Select * from public.renting;
 
 
 DROP TABLE IF EXISTS public.Works_for Cascade;
@@ -216,7 +165,6 @@ CREATE TABLE IF NOT EXISTS public.Works_for (
     PRIMARY KEY (SSN_SID),
     FOREIGN KEY (SSN_SID) REFERENCES public.Employee(SSN_SID)
 );
-
 
 
 DROP TABLE IF EXISTS public.Manages_at Cascade;
@@ -300,14 +248,15 @@ VALUES
 
 Delete From public.Room;
 -- Insert data for Room table ensuring at least 5 rooms of different capacity per hotel
+-- Adding more rooms to Luxury Stay hotels (Chain 1, Hotels 1-8)
 INSERT INTO public.Room (Hotel_chain_ID, Hotel_ID, Room_ID, Price, Amenity, Capacity, View, Extension, Damage)
 VALUES
--- Rooms for Luxury Stay Hotel 1 (Hotel_IDs 1-8)
-(1, 1, 101, 200, 'TV, WiFi, Air Conditioning', 1, 'City View', 'Yes', 'No'),
-(1, 1, 102, 250, 'TV, WiFi, Mini Bar', 2, 'City View', 'Yes', 'No'),
-(1, 1, 103, 300, 'TV, WiFi, Mini Bar, Balcony', 3, 'Sea View', 'Yes', 'No'),
-(1, 1, 104, 350, 'TV, WiFi, Mini Bar, Jacuzzi', 4, 'Sea View', 'Yes', 'No'),
-(1, 1, 105, 400, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 5, 'Sea View', 'Yes', 'No'),
+-- Hotel 1 (already has 5 rooms, adding 5 more)
+(1, 1, 111, 180, 'TV, WiFi', 1, 'City View', 'No', 'No'),
+(1, 1, 112, 230, 'TV, WiFi, Fridge', 2, 'City View', 'No', 'No'),
+(1, 1, 113, 280, 'TV, WiFi, Balcony', 3, 'Park View', 'Yes', 'No'),
+(1, 1, 114, 330, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
+(1, 1, 115, 380, 'TV, WiFi, Jacuzzi', 5, 'Garden View', 'Yes', 'No'),
 
 (1, 2, 106, 220, 'WiFi, Fridge, Air Conditioning', 1, 'City View', 'No', 'No'),
 (1, 2, 107, 270, 'WiFi, Mini Bar', 2, 'Park View', 'Yes', 'No'),
@@ -326,9 +275,36 @@ VALUES
 (1, 7, 153, 340, 'TV, WiFi, Mini Bar, Balcony', 3, 'Skyline View', 'Yes', 'No'),
 (1, 7, 154, 390, 'TV, WiFi, Kitchenette', 4, 'Skyline View', 'Yes', 'No'),
 (1, 7, 155, 460, 'TV, WiFi, Mini Bar, Jacuzzi', 5, 'Skyline View', 'Yes', 'No'),
+-- Hotel 3 (adding 5 rooms)
+(1, 3, 301, 210, 'TV, WiFi, Air Conditioning', 1, 'City View', 'No', 'No'),
+(1, 3, 302, 260, 'TV, WiFi, Mini Bar', 2, 'City View', 'Yes', 'No'),
+(1, 3, 303, 310, 'TV, WiFi, Mini Bar, Balcony', 3, 'Sea View', 'Yes', 'No'),
+(1, 3, 304, 360, 'TV, WiFi, Mini Bar, Jacuzzi', 4, 'Sea View', 'Yes', 'No'),
+(1, 3, 305, 410, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 5, 'Sea View', 'Yes', 'No'),
 
--- (Hotel_chain_ID, Hotel_ID, Room_ID, Price, Amenity, Capacity, View, Extension, Damage)
--- Rooms for each hotel in Comfort Inn (Hotel_IDs 9-16)
+-- Hotel 4 (adding 5 rooms)
+(1, 4, 401, 190, 'TV, WiFi, Air Conditioning', 1, 'City View', 'No', 'No'),
+(1, 4, 402, 240, 'TV, WiFi, Mini Bar', 2, 'City View', 'Yes', 'No'),
+(1, 4, 403, 290, 'TV, WiFi, Mini Bar, Balcony', 3, 'Sea View', 'Yes', 'No'),
+(1, 4, 404, 340, 'TV, WiFi, Mini Bar, Jacuzzi', 4, 'Sea View', 'Yes', 'No'),
+(1, 4, 405, 390, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 5, 'Sea View', 'Yes', 'No'),
+
+-- Hotel 5 (adding 5 rooms)
+(1, 5, 501, 220, 'TV, WiFi, Air Conditioning', 1, 'City View', 'No', 'No'),
+(1, 5, 502, 270, 'TV, WiFi, Mini Bar', 2, 'City View', 'Yes', 'No'),
+(1, 5, 503, 320, 'TV, WiFi, Mini Bar, Balcony', 3, 'Sea View', 'Yes', 'No'),
+(1, 5, 504, 370, 'TV, WiFi, Mini Bar, Jacuzzi', 4, 'Sea View', 'Yes', 'No'),
+(1, 5, 505, 420, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 5, 'Sea View', 'Yes', 'No'),
+
+-- Hotel 8 (adding 5 rooms)
+(1, 8, 801, 230, 'TV, WiFi, Air Conditioning', 1, 'City View', 'No', 'No'),
+(1, 8, 802, 280, 'TV, WiFi, Mini Bar', 2, 'City View', 'Yes', 'No'),
+(1, 8, 803, 330, 'TV, WiFi, Mini Bar, Balcony', 3, 'Sea View', 'Yes', 'No'),
+(1, 8, 804, 380, 'TV, WiFi, Mini Bar, Jacuzzi', 4, 'Sea View', 'Yes', 'No'),
+(1, 8, 805, 430, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 5, 'Sea View', 'Yes', 'No'),
+
+-- Adding more rooms to Comfort Inn hotels (Chain 2, Hotels 9-16)
+-- Hotel 13 (adding 5 rooms)
 (2, 9, 201, 80, 'TV, WiFi', 1, 'Garden View', 'No', 'No'),
 (2, 9, 202, 100, 'TV, WiFi, Fridge', 2, 'Garden View', 'No', 'No'),
 (2, 9, 203, 120, 'TV, WiFi, Balcony', 3, 'Pool View', 'Yes', 'No'),
@@ -353,13 +329,40 @@ VALUES
 (2, 11, 274, 160, 'WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
 (2, 11, 275, 200, 'WiFi, Mini Bar, Jacuzzi', 5, 'Park View', 'Yes', 'No'),
 
--- (Hotel_chain_ID, Hotel_ID, Room_ID, Price, Amenity, Capacity, View, Extension, Damage)
--- Rooms for each hotel in Budget Rooms (Hotel_IDs 17-24)
-(3, 17, 301, 50, 'WiFi', 1, 'Street View', 'No', 'No'),
-(3, 17, 302, 70, 'WiFi, Fridge', 2, 'City View', 'No', 'No'),
-(3, 17, 303, 90, 'WiFi, Mini Bar', 3, 'City View', 'Yes', 'No'),
-(3, 17, 304, 110, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
-(3, 17, 305, 130, 'WiFi, Jacuzzi', 5, 'Pool View', 'Yes', 'No'),
+(2, 13, 1301, 90, 'TV, WiFi', 1, 'Garden View', 'No', 'No'),
+(2, 13, 1302, 110, 'TV, WiFi, Fridge', 2, 'Garden View', 'No', 'No'),
+(2, 13, 1303, 130, 'TV, WiFi, Balcony', 3, 'Pool View', 'Yes', 'No'),
+(2, 13, 1304, 150, 'TV, WiFi, Kitchenette', 4, 'Pool View', 'Yes', 'No'),
+(2, 13, 1305, 170, 'TV, WiFi, Jacuzzi', 5, 'Garden View', 'Yes', 'No'),
+
+-- Hotel 14 (adding 5 rooms)
+(2, 14, 1401, 95, 'TV, WiFi', 1, 'Garden View', 'No', 'No'),
+(2, 14, 1402, 115, 'TV, WiFi, Fridge', 2, 'Garden View', 'No', 'No'),
+(2, 14, 1403, 135, 'TV, WiFi, Balcony', 3, 'Pool View', 'Yes', 'No'),
+(2, 14, 1404, 155, 'TV, WiFi, Kitchenette', 4, 'Pool View', 'Yes', 'No'),
+(2, 14, 1405, 175, 'TV, WiFi, Jacuzzi', 5, 'Garden View', 'Yes', 'No'),
+
+-- Hotel 15 (adding 5 rooms)
+(2, 15, 1501, 85, 'TV, WiFi', 1, 'Garden View', 'No', 'No'),
+(2, 15, 1502, 105, 'TV, WiFi, Fridge', 2, 'Garden View', 'No', 'No'),
+(2, 15, 1503, 125, 'TV, WiFi, Balcony', 3, 'Pool View', 'Yes', 'No'),
+(2, 15, 1504, 145, 'TV, WiFi, Kitchenette', 4, 'Pool View', 'Yes', 'No'),
+(2, 15, 1505, 165, 'TV, WiFi, Jacuzzi', 5, 'Garden View', 'Yes', 'No'),
+
+-- Hotel 16 (adding 5 rooms)
+(2, 16, 1601, 100, 'TV, WiFi', 1, 'Garden View', 'No', 'No'),
+(2, 16, 1602, 120, 'TV, WiFi, Fridge', 2, 'Garden View', 'No', 'No'),
+(2, 16, 1603, 140, 'TV, WiFi, Balcony', 3, 'Pool View', 'Yes', 'No'),
+(2, 16, 1604, 160, 'TV, WiFi, Kitchenette', 4, 'Pool View', 'Yes', 'No'),
+(2, 16, 1605, 180, 'TV, WiFi, Jacuzzi', 5, 'Garden View', 'Yes', 'No'),
+
+-- Adding more rooms to Budget Rooms hotels (Chain 3, Hotels 17-24)
+-- Hotel 21 (adding 5 rooms)
+(3, 17, 3301, 50, 'WiFi', 1, 'Street View', 'No', 'No'),
+(3, 17, 3302, 70, 'WiFi, Fridge', 2, 'City View', 'No', 'No'),
+(3, 17, 3303, 90, 'WiFi, Mini Bar', 3, 'City View', 'Yes', 'No'),
+(3, 17, 3304, 110, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
+(3, 17, 3305, 130, 'WiFi, Jacuzzi', 5, 'Pool View', 'Yes', 'No'),
 
 (3, 18, 311, 220, 'TV, WiFi, Air Conditioning', 1, 'City View', 'No', 'No'),
 (3, 18, 312, 270, 'TV, WiFi, Mini Bar', 2, 'City View', 'Yes', 'No'),
@@ -379,13 +382,40 @@ VALUES
 (3, 20, 394, 125, 'WiFi, Kitchenette', 4, 'Skyline View', 'Yes', 'No'),
 (3, 20, 395, 160, 'WiFi, Mini Bar, Jacuzzi', 5, 'Skyline View', 'Yes', 'No'),
 
--- (Hotel_chain_ID, Hotel_ID, Room_ID, Price, Amenity, Capacity, View, Extension, Damage)
--- Rooms for each hotel in Ocean View Resorts (Hotel_IDs 25-32)
-(4, 25, 401, 180, 'TV, WiFi, Mini Bar', 1, 'Sea View', 'Yes', 'No'),
-(4, 25, 402, 220, 'TV, WiFi, Mini Bar, Balcony', 2, 'Sea View', 'Yes', 'No'),
-(4, 25, 403, 260, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Oceanfront', 'Yes', 'No'),
-(4, 25, 404, 300, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Oceanfront', 'Yes', 'No'),
-(4, 25, 405, 350, 'TV, WiFi, Jacuzzi, Kitchenette, Lounge', 5, 'Oceanfront', 'Yes', 'No'),
+(3, 21, 2101, 55, 'WiFi', 1, 'Street View', 'No', 'No'),
+(3, 21, 2102, 75, 'WiFi, Fridge', 2, 'City View', 'No', 'No'),
+(3, 21, 2103, 95, 'WiFi, Mini Bar', 3, 'City View', 'Yes', 'No'),
+(3, 21, 2104, 115, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
+(3, 21, 2105, 135, 'WiFi, Jacuzzi', 5, 'Pool View', 'Yes', 'No'),
+
+-- Hotel 22 (adding 5 rooms)
+(3, 22, 2201, 60, 'WiFi', 1, 'Street View', 'No', 'No'),
+(3, 22, 2202, 80, 'WiFi, Fridge', 2, 'City View', 'No', 'No'),
+(3, 22, 2203, 100, 'WiFi, Mini Bar', 3, 'City View', 'Yes', 'No'),
+(3, 22, 2204, 120, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
+(3, 22, 2205, 140, 'WiFi, Jacuzzi', 5, 'Pool View', 'Yes', 'No'),
+
+-- Hotel 23 (adding 5 rooms)
+(3, 23, 2301, 65, 'WiFi', 1, 'Street View', 'No', 'No'),
+(3, 23, 2302, 85, 'WiFi, Fridge', 2, 'City View', 'No', 'No'),
+(3, 23, 2303, 105, 'WiFi, Mini Bar', 3, 'City View', 'Yes', 'No'),
+(3, 23, 2304, 125, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
+(3, 23, 2305, 145, 'WiFi, Jacuzzi', 5, 'Pool View', 'Yes', 'No'),
+
+-- Hotel 24 (adding 5 rooms)
+(3, 24, 2401, 70, 'WiFi', 1, 'Street View', 'No', 'No'),
+(3, 24, 2402, 90, 'WiFi, Fridge', 2, 'City View', 'No', 'No'),
+(3, 24, 2403, 110, 'WiFi, Mini Bar', 3, 'City View', 'Yes', 'No'),
+(3, 24, 2404, 130, 'TV, WiFi, Kitchenette', 4, 'Park View', 'Yes', 'No'),
+(3, 24, 2405, 150, 'WiFi, Jacuzzi', 5, 'Pool View', 'Yes', 'No'),
+
+-- Adding more rooms to Ocean View Resorts (Chain 4, Hotels 25-32)
+-- Hotel 29 (adding 5 rooms)
+(4, 25, 4401, 180, 'TV, WiFi, Mini Bar', 1, 'Sea View', 'Yes', 'No'),
+(4, 25, 4402, 220, 'TV, WiFi, Mini Bar, Balcony', 2, 'Sea View', 'Yes', 'No'),
+(4, 25, 4403, 260, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Oceanfront', 'Yes', 'No'),
+(4, 25, 4404, 300, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Oceanfront', 'Yes', 'No'),
+(4, 25, 4405, 350, 'TV, WiFi, Jacuzzi, Kitchenette, Lounge', 5, 'Oceanfront', 'Yes', 'No'),
 
 (4, 26, 421, 210, 'WiFi, Fridge, Air Conditioning', 1, 'River View', 'No', 'No'),
 (4, 26, 422, 260, 'WiFi, Mini Bar', 2, 'River View', 'Yes', 'No'),
@@ -405,13 +435,40 @@ VALUES
 (4, 28, 414, 470, 'WiFi, Kitchenette', 4, 'Coast View', 'Yes', 'No'),
 (4, 28, 415, 520, 'WiFi, Mini Bar, Jacuzzi', 5, 'Coast View', 'Yes', 'No'),
 
---(Hotel_chain_ID, Hotel_ID, Room_ID, Price, Amenity, Capacity, View, Extension, Damage)
--- Rooms for each hotel in Mountain Retreat (Hotel_IDs 33-40)
-(5, 33, 501, 200, 'TV, WiFi, Mini Bar', 1, 'Mountain View', 'Yes', 'No'),
-(5, 33, 502, 250, 'TV, WiFi, Mini Bar, Balcony', 2, 'Mountain View', 'Yes', 'No'),
-(5, 33, 503, 300, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Valley View', 'Yes', 'No'),
-(5, 33, 504, 350, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Valley View', 'Yes', 'No'),
-(5, 33, 505, 400, 'TV, WiFi, Jacuzzi, Kitchenette, Fireplace', 5, 'Valley View', 'Yes', 'No'),
+(4, 29, 2901, 190, 'TV, WiFi, Mini Bar', 1, 'Sea View', 'Yes', 'No'),
+(4, 29, 2902, 230, 'TV, WiFi, Mini Bar, Balcony', 2, 'Sea View', 'Yes', 'No'),
+(4, 29, 2903, 270, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Oceanfront', 'Yes', 'No'),
+(4, 29, 2904, 310, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Oceanfront', 'Yes', 'No'),
+(4, 29, 2905, 360, 'TV, WiFi, Jacuzzi, Kitchenette, Lounge', 5, 'Oceanfront', 'Yes', 'No'),
+
+-- Hotel 30 (adding 5 rooms)
+(4, 30, 3001, 200, 'TV, WiFi, Mini Bar', 1, 'Sea View', 'Yes', 'No'),
+(4, 30, 3002, 240, 'TV, WiFi, Mini Bar, Balcony', 2, 'Sea View', 'Yes', 'No'),
+(4, 30, 3003, 280, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Oceanfront', 'Yes', 'No'),
+(4, 30, 3004, 320, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Oceanfront', 'Yes', 'No'),
+(4, 30, 3005, 370, 'TV, WiFi, Jacuzzi, Kitchenette, Lounge', 5, 'Oceanfront', 'Yes', 'No'),
+
+-- Hotel 31 (adding 5 rooms)
+(4, 31, 3101, 170, 'TV, WiFi, Mini Bar', 1, 'Sea View', 'Yes', 'No'),
+(4, 31, 3102, 210, 'TV, WiFi, Mini Bar, Balcony', 2, 'Sea View', 'Yes', 'No'),
+(4, 31, 3103, 250, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Oceanfront', 'Yes', 'No'),
+(4, 31, 3104, 290, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Oceanfront', 'Yes', 'No'),
+(4, 31, 3105, 340, 'TV, WiFi, Jacuzzi, Kitchenette, Lounge', 5, 'Oceanfront', 'Yes', 'No'),
+
+-- Hotel 32 (adding 5 rooms)
+(4, 32, 3201, 220, 'TV, WiFi, Mini Bar', 1, 'Sea View', 'Yes', 'No'),
+(4, 32, 3202, 260, 'TV, WiFi, Mini Bar, Balcony', 2, 'Sea View', 'Yes', 'No'),
+(4, 32, 3203, 300, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Oceanfront', 'Yes', 'No'),
+(4, 32, 3204, 340, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Oceanfront', 'Yes', 'No'),
+(4, 32, 3205, 390, 'TV, WiFi, Jacuzzi, Kitchenette, Lounge', 5, 'Oceanfront', 'Yes', 'No'),
+
+-- Adding more rooms to Mountain Retreat (Chain 5, Hotels 33-40)
+-- Hotel 37 (adding 5 rooms)
+(5, 33, 5501, 200, 'TV, WiFi, Mini Bar', 1, 'Mountain View', 'Yes', 'No'),
+(5, 33, 5502, 250, 'TV, WiFi, Mini Bar, Balcony', 2, 'Mountain View', 'Yes', 'No'),
+(5, 33, 5503, 300, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Valley View', 'Yes', 'No'),
+(5, 33, 5504, 350, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Valley View', 'Yes', 'No'),
+(5, 33, 5505, 400, 'TV, WiFi, Jacuzzi, Kitchenette, Fireplace', 5, 'Valley View', 'Yes', 'No'),
 
 (5, 34, 531, 250, 'TV, WiFi, Air Conditioning', 1, 'Garden View', 'Yes', 'No'),
 (5, 34, 532, 280, 'TV, WiFi, Mini Bar', 2, 'Garden View', 'Yes', 'No'),
@@ -429,40 +486,233 @@ VALUES
 (5, 36, 512, 340, 'WiFi, Mini Bar', 2, 'Snow View', 'Yes', 'No'),
 (5, 36, 513, 390, 'WiFi, Mini Bar, Balcony', 3, 'Forest View', 'Yes', 'No'),
 (5, 36, 514, 440, 'WiFi, Kitchenette', 4, 'Forest View', 'Yes', 'No'),
-(5, 36, 515, 500, 'WiFi, Mini Bar, Jacuzzi', 5, 'Forest View', 'Yes', 'No');
+(5, 36, 515, 500, 'WiFi, Mini Bar, Jacuzzi', 5, 'Forest View', 'Yes', 'No'),
 
 
--- Delete from public.Employee;
--- -- Insert data into Employee table
--- INSERT INTO public.Employee (SSN_SID, Role, FullName, Email, Password, Hotel_FID)
--- VALUES
--- ('E001', 'Manager', 'Alice Johnson', 'alice.johnson@hotel.com', 'securePass1', 1),
--- ('E002', 'Receptionist', 'Bob Smith', 'bob.smith@hotel.com', 'securePass2', 1),
--- ('E003', 'Cleaner', 'Charlie Brown', 'charlie.brown@hotel.com', 'securePass3', 2),
--- ('E004', 'Manager', 'Diana Ross', 'diana.ross@hotel.com', 'securePass4', 3),
--- ('E005', 'Receptionist', 'Ethan Hunt', 'ethan.hunt@hotel.com', 'securePass5', 4),
--- ('E006', 'Cleaner', 'Fiona Blake', 'fiona.blake@hotel.com', 'securePass6', 5),
--- ('E007', 'Manager', 'George Miller', 'george.miller@hotel.com', 'securePass7', 6),
--- ('E008', 'Receptionist', 'Hannah Davis', 'hannah.davis@hotel.com', 'securePass8', 7);
+(5, 37, 3701, 210, 'TV, WiFi, Mini Bar', 1, 'Mountain View', 'Yes', 'No'),
+(5, 37, 3702, 260, 'TV, WiFi, Mini Bar, Balcony', 2, 'Mountain View', 'Yes', 'No'),
+(5, 37, 3703, 310, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Valley View', 'Yes', 'No'),
+(5, 37, 3704, 360, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Valley View', 'Yes', 'No'),
+(5, 37, 3705, 410, 'TV, WiFi, Jacuzzi, Kitchenette, Fireplace', 5, 'Valley View', 'Yes', 'No'),
 
--- Delete From public.Customer;
--- -- Insert data into Customer table
--- INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address, Date_reg)
--- VALUES
--- (101, 'John Doe', 'john.doe@email.com', 'password123', '123 Main St, New York', '2024-03-01'),
--- (102, 'Emma Watson', 'emma.watson@email.com', 'mypassword', '456 Elm St, Los Angeles', '2024-03-05'),
--- (103, 'Liam Smith', 'liam.smith@email.com', 'liamPass99', '789 Pine St, Chicago', '2024-03-10'),
--- (104, 'Sophia Brown', 'sophia.brown@email.com', 'sophiaSecret', '101 Maple St, Miami', '2024-03-15'),
--- (105, 'Michael Johnson', 'michael.johnson@email.com', 'michael2024', '222 Oak St, Houston', '2024-03-20'),
--- (106, 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco', '2024-03-22'),
--- (107, 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle', '2024-03-25'),
--- (108, 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston', '2024-03-28');
+-- Hotel 38 (adding 5 rooms)
+(5, 38, 3801, 220, 'TV, WiFi, Mini Bar', 1, 'Mountain View', 'Yes', 'No'),
+(5, 38, 3802, 270, 'TV, WiFi, Mini Bar, Balcony', 2, 'Mountain View', 'Yes', 'No'),
+(5, 38, 3803, 320, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Valley View', 'Yes', 'No'),
+(5, 38, 3804, 370, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Valley View', 'Yes', 'No'),
+(5, 38, 3805, 420, 'TV, WiFi, Jacuzzi, Kitchenette, Fireplace', 5, 'Valley View', 'Yes', 'No'),
 
--- INSERT INTO public.Customer (Cust_ID, Full_Name, Email, Password, Address)
--- VALUES
--- (110, 'Test2','test2@gmail.com','pw2','');
+-- Hotel 39 (adding 5 rooms)
+(5, 39, 3901, 230, 'TV, WiFi, Mini Bar', 1, 'Mountain View', 'Yes', 'No'),
+(5, 39, 3902, 280, 'TV, WiFi, Mini Bar, Balcony', 2, 'Mountain View', 'Yes', 'No'),
+(5, 39, 3903, 330, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Valley View', 'Yes', 'No'),
+(5, 39, 3904, 380, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Valley View', 'Yes', 'No'),
+(5, 39, 3905, 430, 'TV, WiFi, Jacuzzi, Kitchenette, Fireplace', 5, 'Valley View', 'Yes', 'No'),
+
+-- Hotel 40 (adding 5 rooms)
+(5, 40, 4001, 240, 'TV, WiFi, Mini Bar', 1, 'Mountain View', 'Yes', 'No'),
+(5, 40, 4002, 290, 'TV, WiFi, Mini Bar, Balcony', 2, 'Mountain View', 'Yes', 'No'),
+(5, 40, 4003, 340, 'TV, WiFi, Mini Bar, Jacuzzi', 3, 'Valley View', 'Yes', 'No'),
+(5, 40, 4004, 390, 'TV, WiFi, Mini Bar, Jacuzzi, Kitchenette', 4, 'Valley View', 'Yes', 'No'),
+(5, 40, 4005, 440, 'TV, WiFi, Jacuzzi, Kitchenette, Fireplace', 5, 'Valley View', 'Yes', 'No');
+
+Delete From public.Customer;
+-- Insert data into Customer table
+INSERT INTO public.Customer ( Full_Name, Email, Password, Address)
+VALUES
+( 'John Doe', 'john.doe@email.com', 'password123', '123 Main St, New York'),
+( 'Emma Watson', 'emma.watson@email.com', 'mypassword', '456 Elm St, Los Angeles'),
+( 'Liam Smith', 'liam.smith@email.com', 'liamPass99', '789 Pine St, Chicago'),
+( 'Sophia Brown', 'sophia.brown@email.com', 'sophiaSecret', '101 Maple St, Miami'),
+( 'Michael Johnson', 'michael.johnson@email.com', 'michael2024', '222 Oak St, Houston'),
+( 'Olivia Martinez', 'olivia.martinez@email.com', 'oliviaPass', '333 Cedar St, San Francisco'),
+( 'William Davis', 'william.davis@email.com', 'william123', '444 Birch St, Seattle'),
+( 'Ava Wilson', 'ava.wilson@email.com', 'avaSecret', '555 Walnut St, Boston');
+
+Delete from public.Employee;
+-- Insert data into Employee table
+INSERT INTO public.Employee ( Role, FullName, Email, Password, Hotel_FID)
+VALUES
+-- Luxury Stay Hotels (Chain 1)
+('Manager', 'John Smith', 'john.smith@luxurystay.com', 'manager123', 1),
+('Receptionist', 'Sarah Johnson', 'sarah.johnson@luxurystay.com', 'reception123', 1),
+('Manager', 'Michael Brown', 'michael.brown@luxurystay.com', 'manager123', 2),
+('Cleaner', 'Emily Davis', 'emily.davis@luxurystay.com', 'cleaner123', 2),
+('Manager', 'David Wilson', 'david.wilson@luxurystay.com', 'manager123', 3),
+('Receptionist', 'Jessica Martinez', 'jessica.martinez@luxurystay.com', 'reception123', 3),
+('Manager', 'Robert Taylor', 'robert.taylor@luxurystay.com', 'manager123', 4),
+('Cleaner', 'Jennifer Anderson', 'jennifer.anderson@luxurystay.com', 'cleaner123', 4),
+('Manager', 'Daniel Thomas', 'daniel.thomas@luxurystay.com', 'manager123', 5),
+('Receptionist', 'Lisa Jackson', 'lisa.jackson@luxurystay.com', 'reception123', 5),
+('Manager', 'Paul White', 'paul.white@luxurystay.com', 'manager123', 6),
+('Cleaner', 'Amy Harris', 'amy.harris@luxurystay.com', 'cleaner123', 6),
+('Manager', 'Kevin Martin', 'kevin.martin@luxurystay.com', 'manager123', 7),
+('Receptionist', 'Michelle Clark', 'michelle.clark@luxurystay.com', 'reception123', 7),
+('Manager', 'Mark Rodriguez', 'mark.rodriguez@luxurystay.com', 'manager123', 8),
+('Cleaner', 'Laura Lewis', 'laura.lewis@luxurystay.com', 'cleaner123', 8),
+
+-- Comfort Inn Hotels (Chain 2)
+('Manager', 'James Lee', 'james.lee@comfortinn.com', 'manager123', 9),
+('Receptionist', 'Patricia Walker', 'patricia.walker@comfortinn.com', 'reception123', 9),
+('Manager', 'Christopher Hall', 'christopher.hall@comfortinn.com', 'manager123', 10),
+('Cleaner', 'Nancy Allen', 'nancy.allen@comfortinn.com', 'cleaner123', 10),
+('Manager', 'Matthew Young', 'matthew.young@comfortinn.com', 'manager123', 11),
+('Receptionist', 'Karen Hernandez', 'karen.hernandez@comfortinn.com', 'reception123', 11),
+('Manager', 'Andrew King', 'andrew.king@comfortinn.com', 'manager123', 12),
+('Cleaner', 'Betty Wright', 'betty.wright@comfortinn.com', 'cleaner123', 12),
+('Manager', 'Edward Scott', 'edward.scott@comfortinn.com', 'manager123', 13),
+('Receptionist', 'Helen Green', 'helen.green@comfortinn.com', 'reception123', 13),
+('Manager', 'Brian Adams', 'brian.adams@comfortinn.com', 'manager123', 14),
+('Cleaner', 'Sandra Baker', 'sandra.baker@comfortinn.com', 'cleaner123', 14),
+('Manager', 'Ronald Nelson', 'ronald.nelson@comfortinn.com', 'manager123', 15),
+('Receptionist', 'Donna Carter', 'donna.carter@comfortinn.com', 'reception123', 15),
+('Manager', 'Jason Mitchell', 'jason.mitchell@comfortinn.com', 'manager123', 16),
+('Cleaner', 'Rebecca Perez', 'rebecca.perez@comfortinn.com', 'cleaner123', 16),
+
+-- Budget Rooms Hotels (Chain 3)
+('Manager', 'Jeffrey Roberts', 'jeffrey.roberts@budgetrooms.com', 'manager123', 17),
+('Receptionist', 'Sharon Turner', 'sharon.turner@budgetrooms.com', 'reception123', 17),
+('Manager', 'Ryan Phillips', 'ryan.phillips@budgetrooms.com', 'manager123', 18),
+('Cleaner', 'Deborah Campbell', 'deborah.campbell@budgetrooms.com', 'cleaner123', 18),
+('Manager', 'Gary Parker', 'gary.parker@budgetrooms.com', 'manager123', 19),
+('Receptionist', 'Carol Evans', 'carol.evans@budgetrooms.com', 'reception123', 19),
+('Manager', 'Timothy Edwards', 'timothy.edwards@budgetrooms.com', 'manager123', 20),
+('Cleaner', 'Ruth Collins', 'ruth.collins@budgetrooms.com', 'cleaner123', 20),
+('Manager', 'Joshua Stewart', 'joshua.stewart@budgetrooms.com', 'manager123', 21),
+('Receptionist', 'Anna Sanchez', 'anna.sanchez@budgetrooms.com', 'reception123', 21),
+('Manager', 'Kenneth Morris', 'kenneth.morris@budgetrooms.com', 'manager123', 22),
+('Cleaner', 'Brenda Rogers', 'brenda.rogers@budgetrooms.com', 'cleaner123', 22),
+('Manager', 'Stephen Reed', 'stephen.reed@budgetrooms.com', 'manager123', 23),
+('Receptionist', 'Pamela Cook', 'pamela.cook@budgetrooms.com', 'reception123', 23),
+('Manager', 'Patrick Morgan', 'patrick.morgan@budgetrooms.com', 'manager123', 24),
+('Cleaner', 'Ashley Bell', 'ashley.bell@budgetrooms.com', 'cleaner123', 24),
+
+-- Ocean View Resorts Hotels (Chain 4)
+('Manager', 'Gregory Murphy', 'gregory.murphy@oceanview.com', 'manager123', 25),
+('Receptionist', 'Katherine Bailey', 'katherine.bailey@oceanview.com', 'reception123', 25),
+('Manager', 'Benjamin Rivera', 'benjamin.rivera@oceanview.com', 'manager123', 26),
+('Cleaner', 'Virginia Cooper', 'virginia.cooper@oceanview.com', 'cleaner123', 26),
+('Manager', 'Dennis Richardson', 'dennis.richardson@oceanview.com', 'manager123', 27),
+('Receptionist', 'Rachel Cox', 'rachel.cox@oceanview.com', 'reception123', 27),
+('Manager', 'Peter Howard', 'peter.howard@oceanview.com', 'manager123', 28),
+('Cleaner', 'Janet Ward', 'janet.ward@oceanview.com', 'cleaner123', 28),
+('Manager', 'Frank Torres', 'frank.torres@oceanview.com', 'manager123', 29),
+('Receptionist', 'Maria Peterson', 'maria.peterson@oceanview.com', 'reception123', 29),
+('Manager', 'Raymond Gray', 'raymond.gray@oceanview.com', 'manager123', 30),
+('Cleaner', 'Heather Ramirez', 'heather.ramirez@oceanview.com', 'cleaner123', 30),
+('Manager', 'Lawrence James', 'lawrence.james@oceanview.com', 'manager123', 31),
+('Receptionist', 'Diane Watson', 'diane.watson@oceanview.com', 'reception123', 31),
+('Manager', 'Nicholas Brooks', 'nicholas.brooks@oceanview.com', 'manager123', 32),
+('Cleaner', 'Olivia Kelly', 'olivia.kelly@oceanview.com', 'cleaner123', 32),
+
+-- Mountain Retreat Hotels (Chain 5)
+('Manager', 'Scott Sanders', 'scott.sanders@mountainretreat.com', 'manager123', 33),
+('Receptionist', 'Christina Price', 'christina.price@mountainretreat.com', 'reception123', 33),
+('Manager', 'Walter Bennett', 'walter.bennett@mountainretreat.com', 'manager123', 34),
+('Cleaner', 'Joyce Wood', 'joyce.wood@mountainretreat.com', 'cleaner123', 34),
+('Manager', 'Eric Barnes', 'eric.barnes@mountainretreat.com', 'manager123', 35),
+('Receptionist', 'Victoria Ross', 'victoria.ross@mountainretreat.com', 'reception123', 35),
+('Manager', 'Samuel Henderson', 'samuel.henderson@mountainretreat.com', 'manager123', 36),
+('Cleaner', 'Kelly Coleman', 'kelly.coleman@mountainretreat.com', 'cleaner123', 36),
+('Manager', 'Brandon Jenkins', 'brandon.jenkins@mountainretreat.com', 'manager123', 37),
+('Receptionist', 'Theresa Perry', 'theresa.perry@mountainretreat.com', 'reception123', 37),
+('Manager', 'Harry Powell', 'harry.powell@mountainretreat.com', 'manager123', 38),
+('Cleaner', 'Megan Long', 'megan.long@mountainretreat.com', 'cleaner123', 38),
+('Manager', 'Jeremy Hughes', 'jeremy.hughes@mountainretreat.com', 'manager123', 39),
+('Receptionist', 'Amanda Foster', 'amanda.foster@mountainretreat.com', 'reception123', 39),
+('Manager', 'Jacob Butler', 'jacob.butler@mountainretreat.com', 'manager123', 40),
+('Cleaner', 'Melissa Simmons', 'melissa.simmons@mountainretreat.com', 'cleaner123', 40);
 
 
+Delete From public.Renting;
+-- Insert data into Renting table
+INSERT INTO public.Renting ( StartDate, EndDate, Status, Payment, Employ_SID, Cust_ID, Room_ID, Hotel_ID)
+VALUES
+    -- Hotel 17 (Budget Stay) - Rooms 301-305
+    ('2025-04-01', '2025-04-05', 'Completed', 500, 'E0001', 'CU0001', 3301, 17),
+    ('2025-04-02', '2025-04-06', 'Ongoing', 650, 'E0001', 'CU0002', 3302, 17),
+    
+    -- Hotel 25 (Ocean Pearl Resort) - Rooms 401-405
+    ('2025-04-03', '2025-04-07', 'Completed', 700, 'E0002', 'CU0003', 4401, 25),
+    ('2025-04-04', '2025-04-08', 'Cancelled', 0, 'E0002', 'CU0004', 4402, 25),
+    
+    -- Hotel 33 (Alpine Resort) - Rooms 501-505
+    ('2025-04-05', '2025-04-09', 'Completed', 550, 'E0003', 'CU0005', 5501, 33),
+    ('2025-04-06', '2025-04-10', 'Ongoing', 600, 'E0003', 'CU0006', 5502, 33),
+    
+    -- Hotel 1 (Luxury Grand Hotel) - Rooms 101-105
+    ('2025-04-07', '2025-04-11', 'Completed', 750, 'E0004', 'CU0007', 111, 1),
+    ('2025-04-08', '2025-04-12', 'Ongoing', 800, 'E0004', 'CU0008', 112, 1),
+    
+    -- Hotel 9 (Comfort Plaza) - Rooms 201-205
+    ('2025-04-09', '2025-04-13', 'Completed', 850, 'E0005', 'CU0001', 201, 9),
+    ('2025-04-10', '2025-04-14', 'Ongoing', 900, 'E0005', 'CU0002', 202, 9),
+    
+    -- Hotel 6 (Luxury Tower) - Rooms 141-145
+    ('2025-04-11', '2025-04-15', 'Completed', 950, 'E0006', 'CU0003', 141, 6),
+    
+    -- Hotel 11 (Comfort City) - Rooms 271-275
+    ('2025-04-12', '2025-04-16', 'Completed', 1000, 'E0007', 'CU0004', 271, 11),
+    
+    -- Hotel 19 (Budget Lodge) - Rooms 381-385
+    ('2025-04-13', '2025-04-17', 'Completed', 1050, 'E0008', 'CU0005', 381, 19),
+    
+    -- Hotel 2 (Luxury Central) - Rooms 106-110
+    ('2025-04-14', '2025-04-18', 'Ongoing', 1100, 'E0009', 'CU0006', 106, 2),
+    
+    -- Hotel 3 (Luxury Heights) - Rooms 301-305
+    ('2025-04-15', '2025-04-19', 'Completed', 1150, 'E00014', 'CU0007', 301, 3),
+    
+    -- Hotel 4 (Luxury Riverside) - Rooms 401-405
+    ('2025-04-16', '2025-04-20', 'Ongoing', 1200, 'E00011', 'CU0008', 401, 4);
+
+Delete From public.Booking;
+-- Insert data into Booking table
+INSERT INTO public.Booking (CheckInDate, CheckOutDate, Status, Cust_ID, Room_ID, Hotel_ID)
+VALUES
+   -- Hotel 17 (Budget Stay) - Rooms 301-305
+    ('2025-05-01', '2025-05-05', 'Confirmed', 'CU0001', 3301, 17),
+    ('2025-05-06', '2025-05-10', 'Pending', 'CU0002', 3302, 17),
+    
+    -- Hotel 25 (Ocean Pearl Resort) - Rooms 401-405
+    ('2025-05-02', '2025-05-07', 'Confirmed', 'CU0003', 4401, 25),
+    ('2025-05-08', '2025-05-12', 'Pending', 'CU0004', 4402, 25),
+    
+    -- Hotel 33 (Alpine Resort) - Rooms 501-505
+    ('2025-05-03', '2025-05-08', 'Confirmed', 'CU0005', 5501, 33),
+    ('2025-05-09', '2025-05-13', 'Pending', 'CU0006', 5502, 33),
+    
+    -- Hotel 1 (Luxury Grand Hotel) - Rooms 101-105
+    ('2025-05-04', '2025-05-09', 'Confirmed', 'CU0007', 111, 1),
+    ('2025-05-10', '2025-05-14', 'Pending', 'CU0008', 112, 1),
+    
+    -- Hotel 9 (Comfort Plaza) - Rooms 201-205
+    ('2025-05-05', '2025-05-10', 'Confirmed', 'CU0001', 201, 9),
+    ('2025-05-11', '2025-05-15', 'Pending', 'CU0002', 202, 9),
+    
+    -- Hotel 6 (Luxury Tower) - Rooms 141-145
+    ('2025-05-06', '2025-05-11', 'Confirmed', 'CU0003', 141, 6),
+    
+    -- Hotel 11 (Comfort City) - Rooms 271-275
+    ('2025-05-07', '2025-05-12', 'Confirmed', 'CU0004', 271, 11),
+    
+    -- Hotel 19 (Budget Lodge) - Rooms 381-385
+    ('2025-05-08', '2025-05-13', 'Confirmed', 'CU0005', 381, 19),
+    
+    -- Hotel 2 (Luxury Central) - Rooms 106-110
+    ('2025-05-09', '2025-05-14', 'Pending', 'CU0006', 106, 2),
+    
+    -- Hotel 3 (Luxury Heights) - Rooms 301-305
+    ('2025-05-10', '2025-05-15', 'Confirmed', 'CU0007', 301, 3),
+    
+    -- Hotel 4 (Luxury Riverside) - Rooms 401-405
+    ('2025-05-11', '2025-05-16', 'Pending', 'CU0008', 401, 4),
+    
+    -- Additional bookings to show different statuses
+    ('2025-05-12', '2025-05-17', 'Cancelled', 'CU0001', 3303, 17),
+    ('2025-05-13', '2025-05-18', 'Confirmed', 'CU0002', 403, 25),
+    ('2025-05-14', '2025-05-19', 'Cancelled', 'CU0003', 503, 33),
+    ('2025-05-15', '2025-05-20', 'Confirmed', 'CU0004', 113, 1);
 
 
 	
