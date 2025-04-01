@@ -7,20 +7,49 @@ const SignUp = ({ setPage }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  // Handle Form Submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      alert("Passwords do not match!");
       return;
     }
-
-    alert(`Welcome, ${username}!`);
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/customer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          full_name: username,
+          email: email,
+          password: password,
+          address: 'N/A'
+        }),
+      });
+  
+      const data = await response.json();
+      console.log("Server response:", data);
+  
+      if (response.ok) {
+        alert("Customer registered successfully!");
+        setPage('mainpageuser');
+      } else {
+        alert("Registration failed: " + (data.message || JSON.stringify(data)));
+      }
+    } catch (error) {
+      console.error("Network or server error:", error);
+      alert("An error occurred. Check console for details.");
+    }
   };
 
+  // Handle Login Redirect
   const handleLoginRedirect = () => {
-    setPage('login'); 
+    setPage('login'); // Go back to login page (if using state-based navigation)
   };
+  
 
   return (
     <div className="signup-container">

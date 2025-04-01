@@ -10,7 +10,7 @@ const client = new Client({
 
 
 client.connect();
-
+module.exports = client;
 // test the connection
 client.query(`Select * from public.hotel_chain`, (err,res) => {
     if(!err){
