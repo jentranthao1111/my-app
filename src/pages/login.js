@@ -36,8 +36,30 @@ const Login = ({ setPage }) => {
 
      
     } else if (role === 'employee') {
-      // authenticate sign in as employee
-      // if authentication works, then -> setPage('mainpageemployee')
+
+      try {
+        const response = await fetch('http://localhost:5000/api/employee/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({email, password}),
+        });
+    
+        const data = await response.json();
+        console.log("Server response:", data);
+    
+        if (data.valid) {
+          alert("Employee login successfully!");
+          localStorage.setItem("ssn_sid", data.ss_sid);
+          setPage('mainpageemployee');
+        } else {
+          alert("Registration failed: " + (data.message || JSON.stringify(data)));
+        }
+      } catch (error) {
+        console.error("Network or server error:", error);
+        alert("An error occurred. Check console for details.");
+      }
     }
   };
 
