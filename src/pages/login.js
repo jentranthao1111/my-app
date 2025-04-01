@@ -15,6 +15,10 @@ const Login = ({ setPage }) => {
       // if authentication works, then -> setPage('mainpageemployee')
     }
   };
+
+  const handleSignUp = () => {
+    setPage('signup');
+  };
   
 
   return (
@@ -37,9 +41,10 @@ const Login = ({ setPage }) => {
 
         <p>
           Don't have an account?{' '}
-          <button type="button" onClick={() => setPage('register')} className="signup-link">
+          <button type="button" onClick={handleSignUp} className="signup-btn">
             Sign Up
           </button>
+
         </p>
       </form>
     </div>
