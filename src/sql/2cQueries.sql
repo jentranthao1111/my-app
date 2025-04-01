@@ -15,13 +15,16 @@ JOIN Room R ON B.room_id = R.room_id;
 SELECT E.fullname, E.role, H.hotel_name
 FROM Employee E
 JOIN Hotel H ON E.hotel_fid = H.hotel_id
-WHERE H.hotel_name = 'Luxury Stay';
+WHERE H.hotel_name ILIKE 'Luxury Grand Hotel';
 
 
--- Query 4: Find details of most recent booking (Nested)
+
+-- Query 4: Find details of most recent bsooking (Nested)
 SELECT *
 FROM booking
-WHERE booking_id = (
-    SELECT MAX(booking_id)
+WHERE checkindate = (
+    SELECT MAX(checkindate)
     FROM booking
 );
+
+
