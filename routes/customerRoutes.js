@@ -47,6 +47,30 @@ router.get("/customer", async(req, res)=>{
     }
 })
 
+// get customer database
+
+router.post("/customer/validate", async(req, res)=>{
+    const { email, password } = req.body;
+
+    try{
+        const result = await db.query(
+            "SELECT * FROM customer WHERE email = $1 AND password = $2",
+            [email, password]
+        );
+
+         if (result.rows.length > 0) {
+            //found a matching customer
+      res.status(200).json({ valid: true, customerId: result.rows[0].cust_id });
+    } else {
+      res.status(200).json({ valid: false });
+    }
+  } catch (err) {
+    console.error("Validation error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 // update full name
 
 router.put("/customer/full_name", async(req, res)=>{

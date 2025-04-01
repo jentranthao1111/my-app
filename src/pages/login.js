@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './css/login.css';
 
 const Login = ({ setPage }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleSubmit = async (e, role) => {
     e.preventDefault(); // Prevent default page reload
@@ -15,9 +15,7 @@ const Login = ({ setPage }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            email, password
-          }),
+          body: JSON.stringify({email, password}),
         });
     
         const data = await response.json();
@@ -53,7 +51,7 @@ const Login = ({ setPage }) => {
       <h2>Login</h2>
       <form className="login-form">
         <label>Username:</label>
-        <input type="text" placeholder="Enter your email" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="text" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
         <label>Password:</label>
         <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
