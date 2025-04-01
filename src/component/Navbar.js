@@ -12,9 +12,6 @@ export default function Navbar() {
         <li>
           <a href="/suits">Suites</a>
         </li>
-        <li>
-          <a href="/login.html">Login</a>
-        </li>
       </ul>
     </nav>
   );
