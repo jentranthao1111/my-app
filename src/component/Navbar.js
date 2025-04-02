@@ -1,5 +1,5 @@
 import React from 'react';
-import './Navbar.css'; // Make sure you create and import a separate CSS file for styling
+import './Navbar.css'; 
 
 export default function Navbar() {
   return (
@@ -7,7 +7,7 @@ export default function Navbar() {
       <a href="/" className="site-title">Hotel E-Commerce</a>
       <ul className="nav-links">
         <li>
-          <a href="/hotel.html">Hotel Search</a>
+          <a href="/pricing">Pricing</a>
         </li>
         <li>
           <a href="/suits">Suites</a>
