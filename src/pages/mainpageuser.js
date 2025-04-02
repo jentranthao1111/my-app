@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './css/mainpage.css';
 import axios from 'axios';
+import Booking from './booking'; // Ensure this path is correct
+
 
 const MainPage = () => {
   const [hotelChains, setHotelChains] = useState([]);
@@ -8,6 +10,10 @@ const MainPage = () => {
   const [rooms, setRooms] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState('main');
+
+
+
 
   useEffect(() => {
     // Fetch hotel chains
@@ -35,10 +41,15 @@ const MainPage = () => {
         .catch(error => console.log(error));
     }
   }, [hotels]);
+  
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+
+  if (page === 'booking') {
+    return <Booking />;
+  }
 
   return (
     <div>
@@ -89,7 +100,15 @@ const MainPage = () => {
           </li>
         ))}
       </ul>
+      <div className="book-room-section">
+  <h2>Book a Room</h2>
+  <button onClick={() => setPage('booking')} className="book-room-btn">
+  Go to Booking
+</button>
+</div>
+
     </div>
+    
   );
 };
 
