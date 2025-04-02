@@ -11,7 +11,7 @@ async function fetchHotels() {
         }
 
         console.log("Fetching hotels for city:", selectedCity);
-        const response = await fetch(`http://localhost:5000/api/hotels?city=${selectedCity}`);
+        const response = await fetch(`http://localhost:5001/api/hotels?city=${selectedCity}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -73,7 +73,7 @@ async function fetchHotelsByCity(city) {
     console.log(`Fetching hotels for city: ${city}`);
     
     try {
-        const response = await fetch(`http://localhost:5000/api/hotels?city=${city}`); // Pass city in query param
+        const response = await fetch(`http://localhost:5001/api/hotels?city=${city}`); // Pass city in query param
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch cities from the backend
     async function fetchCities() {
         try {
-            const response = await fetch("http://localhost:5000/api/cities");
+            const response = await fetch("http://localhost:5001/api/cities");
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);

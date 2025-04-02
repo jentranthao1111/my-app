@@ -10,7 +10,7 @@ const Login = ({ setPage }) => {
     if (role === 'user') {
       // authenticate sign in as user
       try {
-        const response = await fetch('http://localhost:5000/api/customer/validate', {
+        const response = await fetch('http://localhost:5001/api/customer/validate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ const Login = ({ setPage }) => {
     } else if (role === 'employee') {
 
       try {
-        const response = await fetch('http://localhost:5000/api/employee/validate', {
+        const response = await fetch('http://localhost:5001/api/employee/validate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
