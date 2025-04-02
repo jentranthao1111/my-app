@@ -3,7 +3,6 @@ const db = require("../src/databasepg");
 const router = express.Router();
 
 // get hotels by city
-
 router.get("/hotels", async (req, res) => {
     const { city } = req.query;
 
@@ -28,10 +27,12 @@ router.get("/hotels", async (req, res) => {
     }
 });
 
+
 // Get distinct cities
 router.get("/cities", async (req, res) => {
     try {
-        const result = await db.query(`SELECT DISTINCT city FROM public.hotel`);
+        const result = await db.query('SELECT DISTINCT city FROM public.hotel');
+        //const result = await db.query('select * from public.room where hotel_id = 1');
         res.json(result.rows);
     } catch (error) {
         console.error("Error fetching cities:", error.message);
@@ -39,39 +40,38 @@ router.get("/cities", async (req, res) => {
     }
 });
 
-// Get hotel and its rooms by name
-router.get("/hotel", async (req, res) => {
-    const hotelName = req.query.name;
 
-    if (!hotelName) {
-        return res.status(400).json({ error: "Hotel name is required" });
-    }
+
+// Get rooms by hotel ID
+router.get('/hotels/:hotelId/rooms', async (req, res) => { 
+    const { hotelId } = req.params;
 
     try {
-        const hotelResult = await db.query(
-            `SELECT * FROM public.hotel WHERE TRIM(LOWER(hotel_name)) = TRIM(LOWER($1))`,
-            [hotelName]
+        // First verify hotel exists
+        const hotelCheck = await db.query(
+            `SELECT * FROM public.hotel WHERE hotel_id = $1`,
+            [hotelId]
         );
 
-        if (hotelResult.rows.length === 0) {
+        if (hotelCheck.rows.length === 0) {
             return res.status(404).json({ error: "Hotel not found" });
         }
 
-        const hotel = hotelResult.rows[0];
+        // Get rooms for this hotel
+        const roomsResult = await db.query(
+            `SELECT * FROM public.room WHERE hotel_id = $1`,
+            [hotelId]
+        );
 
-        const roomsResult = await db.query(`
-            SELECT r.* 
-            FROM public.room r
-            JOIN public.hotel h ON r.hotel_id = h.hotel_id
-            WHERE TRIM(LOWER(h.hotel_name)) = TRIM(LOWER($1))
-        `, [hotelName]);
-
-        hotel.rooms = roomsResult.rows;
-        res.json(hotel);
+        res.json({
+            hotel: hotelCheck.rows[0],
+            rooms: roomsResult.rows
+        });
     } catch (error) {
-        console.error("Error fetching hotel details:", error.message);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("Error fetching rooms:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
+
 
 module.exports = router;

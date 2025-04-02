@@ -30,7 +30,7 @@ router.delete("/booking", async(req, res)=>{
         res.json("Booking was deleted");
     } catch (err){
         console.error(err.message);
-        res.status(500).json({ error: "Failed to delete booking});
+        res.status(500).json({ error: "Failed to delete booking"});
     }
 });
 

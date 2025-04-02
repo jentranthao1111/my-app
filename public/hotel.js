@@ -2,6 +2,8 @@ let cities = []; // Declare `cities` globally so both `fetchCities` and `filterS
 let selectedCity = ''; // Store the selected city here
 let findbtn = document.getElementById('findbtn');
 let citiesLoaded = false; // Flag to track if cities have been loaded
+let suggestionsBox = document.getElementById("suggestions");
+
 
 async function fetchHotels() {
     try {
@@ -18,7 +20,7 @@ async function fetchHotels() {
         }
 
         const hotels = await response.json();
-        console.log("Fetched hotels:", hotels);
+        console.log("Fetched hotels testtt:", hotels);
         displayHotels(hotels);
 
     } catch (error) {
@@ -34,7 +36,7 @@ function filterSuggestions() {
     }
 
     let input = document.getElementById("searchInput").value.toLowerCase();
-    let suggestionsBox = document.getElementById("suggestions");
+ 
     suggestionsBox.innerHTML = "";
 
     if (input === "") {
@@ -59,8 +61,7 @@ function filterSuggestions() {
             document.getElementById("searchInput").value = city;
             suggestionsBox.style.display = "none";
             
-            // After selecting city, fetch the hotels
-            fetchHotels();
+            fetchHotels();// After selecting city, fetch the hotels
         };
         suggestionsBox.appendChild(li);
     });
@@ -69,56 +70,60 @@ function filterSuggestions() {
     suggestionsBox.classList.add("border", "rounded-lg", "mt-1", "shadow-md", "absolute", "bg-white", "w-full");
 }
 
-async function fetchHotelsByCity(city) {
-    console.log(`Fetching hotels for city: ${city}`);
-    
-    try {
-        const response = await fetch(`http://localhost:5001/api/hotels?city=${city}`); // Pass city in query param
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const hotels = await response.json();
-        console.log("Fetched hotels:", hotels);
-        displayHotels(hotels); // Update the table with fetched hotels
-    } catch (error) {
-        console.error("Error fetching hotels:", error);
-    }
-}
 
 function displayHotels(hotels) {
-        const tableBody = document.getElementById('hotelTableBody');
-        tableBody.innerHTML = ""; // Clear previous results
-    
-        if (hotels.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='4' class='text-center text-gray-500'>No hotels found for this city.</td></tr>";
-            return;
-        }
-    
-        hotels.forEach(hotel => {
-            let row = document.createElement("tr");
-            row.classList.add("border", "border-gray-300");
+    const tableBody = document.getElementById('hotelTableBody');
+    tableBody.innerHTML = ""; // Clear previous results
 
-            // <a href="hotel_room.html?name=${encodeURIComponent(hotel.hotel_name)}" class="text-blue-500 hover:underline">
-                    //     ${hotel.hotel_name}
-                    // </a>
-
-            row.innerHTML = `
-                <td class="border border-gray-300 px-4 py-2">
-                    
-                    <a href="hotel_room.html? id=${encodeURIComponent(hotel.hotel_name)}" class="text-blue-500 hover:underline">
-                        ${hotel.hotel_name}
-                    </a>
-                </td>
-                
-                <td class="border border-gray-300 px-4 py-2">${hotel.address}</td>
-                <td class="border border-gray-300 px-4 py-2">${hotel.category}</td>
-                <td class="border border-gray-300 px-4 py-2">${hotel.email || "N/A"}</td>
-            `;
-    
-            tableBody.appendChild(row);
-        });
+    if (hotels.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='4' class='text-center text-gray-500'>No hotels found for this city.</td></tr>";
+        return;
     }
+
+    hotels.forEach(hotel => {
+        let row = document.createElement("tr");
+        row.classList.add("border", "border-gray-300");
+
+        let hotelLink = document.createElement("a");
+        hotelLink.href = "#"; // Prevents default navigation
+        hotelLink.classList.add("text-blue-500", "hover:underline");
+        hotelLink.textContent = hotel.hotel_name;
+
+        hotelLink.addEventListener("click", function (event) {
+            event.preventDefault(); // Stop default link behavior
+
+            let checkInDate = document.getElementById("checkInDate").value;
+            let checkOutDate = document.getElementById("checkOutDate").value;
+
+            if (!checkInDate || !checkOutDate) {
+                alert("Please select check-in and check-out dates first.");
+                return;
+            }
+
+            console.log("Check-in Date:", checkInDate);
+            console.log("Check-out Date:", checkOutDate);
+
+            // ✅ Store check-in and check-out dates in localStorage
+            localStorage.setItem("checkInDate", checkInDate);
+            localStorage.setItem("checkOutDate", checkOutDate);
+
+            // ✅ Navigate to hotel_room.html after storing data
+            window.location.href = `hotel_room.html?id=${hotel.hotel_id}`;
+        });
+
+        row.innerHTML = `
+            <td class="border border-gray-300 px-4 py-2"></td>
+            <td class="border border-gray-300 px-4 py-2">${hotel.address}</td>
+            <td class="border border-gray-300 px-4 py-2">${hotel.category}</td>
+            <td class="border border-gray-300 px-4 py-2">${hotel.email || "N/A"}</td>
+        `;
+
+        // Append hotel link to the first cell
+        row.cells[0].appendChild(hotelLink);
+        tableBody.appendChild(row);
+    });
+}
+
     
 
 document.addEventListener("DOMContentLoaded", function () {

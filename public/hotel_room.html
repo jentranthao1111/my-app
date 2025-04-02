@@ -10,12 +10,14 @@
 
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl mx-auto">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4" id="hotelName">Loading hotel...</h2>
+        <p id="checkInDisplay"></p>
+        <p id="checkOutDisplay"></p>
 
         <div id="roomTable">
             <!-- Rooms will be dynamically added here -->
         </div>
 
-        <button onclick="window.history.back()" class="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">
+        <button onclick="clearPageAndGoBack()" class="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">
             Back to Hotels
         </button>
     </div>

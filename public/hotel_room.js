@@ -1,40 +1,76 @@
 const urlParams = new URLSearchParams(window.location.search);
-const hotelName = urlParams.get("name"); // Get hotel name from the URL
-console.log("Extracted Hotel Name:", hotelName); 
-async function fetchHotelDetails() {
+const hotelId = urlParams.get("id"); // Get hotel name from the URL
+const roomTable = document.getElementById("roomTable");
 
-    if (!hotelName) {
-        console.error("Hotel name not provided in the URL.");
+roomTable.innerHTML = ""; // Clear any previous results
+
+const table = document.createElement("table");
+    
+console.log("Extracted Hotel id:", hotelId); 
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('hotelName').textContent = hotelId;
+    const checkInDate = localStorage.getItem("checkInDate");
+    const checkOutDate = localStorage.getItem("checkOutDate");
+    if (checkInDate && checkOutDate) {
+        console.log("Check-in:", checkInDate);
+        console.log("Check-out:", checkOutDate);
+
+        // Example: Displaying the dates in an HTML element
+        document.getElementById("checkInDisplay").textContent = `Check-in: ${checkInDate}`;
+        document.getElementById("checkOutDisplay").textContent = `Check-out: ${checkOutDate}`;
+    } else {
+        console.log("No check-in or check-out date found.");
+    }
+
+    if (!hotelId) {
+        console.error("Hotel id not provided in the URL.");
         return;
     }
 
+    fetchHotelDetails(hotelId);
+
+});
+
+//const response = await fetch(`http://localhost:5001/api/hotels/${encodeURIComponent(hotelName)}`);
+// const response = await fetch(`http://localhost:5001/api/hotel/${(hotelid)}`);
+ //await fetch("http://localhost:5001/api/cities");
+
+async function fetchHotelDetails(hotelId) {
+   
+    console.log("Test hotel room from fetch hotel details.");
     try {
-        // Fetch the hotel details and its rooms using the hotel name
-        const response = await fetch(`http://localhost:5001/api/hotels/${encodeURIComponent(hotelName)}`);
-        //const response = await fetch(`http://localhost:5001/api/hotel/?name=${encodeURIComponent(hotelName)}`);
-        
+        const response = await fetch(`http://localhost:5001/api/hotels/${hotelId}/rooms`);
+   
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const hotelData = await response.json();
-        document.getElementById('hotelName').textContent = hotelData.hotel_name;
-        displayRooms(hotelData.rooms); // Call function to display rooms
+        const data = await response.json();
+        console.log(data);
+        document.getElementById('hotelName').textContent = data.hotel.hotel_name;
+        displayRooms(data.rooms);
+        
     } catch (error) {
-        console.error("Error fetching hotel details:", error);
+        console.error("Error:", error);
+        roomTable.innerHTML = `
+            <p class='text-red-500'>
+                Failed to load rooms. Please try again later.
+            </p>
+        `;
     }
 }
 
 function displayRooms(rooms) {
-    const roomTable = document.getElementById("roomTable");
-    roomTable.innerHTML = ""; // Clear any previous results
 
     if (!rooms || rooms.length === 0) {
         roomTable.innerHTML = "<p>No rooms available for this hotel.</p>";
         return;
     }
 
-    const table = document.createElement("table");
+    // const table = document.createElement("table");
+
     table.classList.add("w-full", "text-left", "border-collapse", "border", "border-gray-300");
 
     const thead = document.createElement("thead");
@@ -43,6 +79,7 @@ function displayRooms(rooms) {
             <th class="border border-gray-300 px-4 py-2">Room View</th>
             <th class="border border-gray-300 px-4 py-2">Price</th>
             <th class="border border-gray-300 px-4 py-2">Amenity</th>
+            <th class="border border-gray-300 px-4 py-2">Booking    </th>
         </tr>
     `;
     table.appendChild(thead);
@@ -56,6 +93,11 @@ function displayRooms(rooms) {
             <td class="border border-gray-300 px-4 py-2">${room.view}</td>
             <td class="border border-gray-300 px-4 py-2">${room.price}</td>
             <td class="border border-gray-300 px-4 py-2">${room.amenity}</td>
+            <td class="border border-gray-300 bg-gray-500 px-4 py-2 text-center">
+                <button onclick="selectRoom('${room.room_id}', '${room.hotel_id}')" class="select-room-btn bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-900" data-room-id="${room.room_id}">
+                    Select
+                </button>
+            </td>
         `;
         tbody.appendChild(row);
     });
@@ -64,4 +106,31 @@ function displayRooms(rooms) {
     roomTable.appendChild(table);
 }
 
-fetchHotelDetails(); // Fetch the hotel details when the page loads
+
+function clearPageAndGoBack() {
+    // ✅ Clear only relevant booking data from localStorage
+    localStorage.removeItem("selectedHotelId");
+    localStorage.removeItem("checkInDate");
+    localStorage.removeItem("checkOutDate");
+
+    // ✅ (Optional) If you also store selected rooms, clear them
+    localStorage.removeItem("selectedRoomId");
+
+    // ✅ Go back to the previous page
+    window.location.href = "hotel.html"; // Change this to your hotel listing page
+}
+
+
+function selectRoom(roomId, hotelId) {
+    const checkInDate = localStorage.getItem("checkInDate") || "";
+    const checkOutDate = localStorage.getItem("checkOutDate") || "";
+
+    // Save booking data to localStorage
+    localStorage.setItem("selectedRoomId", roomId);
+    localStorage.setItem("selectedHotelId", hotelId);
+    localStorage.setItem("checkInDate", checkInDate);
+    localStorage.setItem("checkOutDate", checkOutDate);
+
+    // Redirect to booking page
+    window.location.href = "booking.js"; // Change to your actual booking page
+}
