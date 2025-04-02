@@ -9,7 +9,7 @@ import BookingPage from './pages/booking';
 
 
 function App() {
-  const [page, setPage] = useState('mainpageuser'); // Initial page state is 'login'
+  const [page, setPage] = useState('login'); // Initial page state is 'login'
 
   return (
     <div className="App">
