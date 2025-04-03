@@ -1,38 +1,78 @@
 import React, { useState } from 'react';
 import './css/booking.css'; 
 
-const BookingForm = ({ onSubmit }) => {
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
-  const [roomId, setRoomId] = useState('');
-  const [hotelId, setHotelId] = useState('');
+const BookingForm = ({ setPage }) => {
+  const [checkInDate, setCheckInDate] = useState(localStorage.getItem('checkInDate') || '');
+  const [checkOutDate, setCheckOutDate] = useState(localStorage.getItem('checkOutDate') || '');
 
-  const handleSubmit = (e) => {
+  const hotelId = localStorage.getItem('selectedHotelId');
+  const roomId = localStorage.getItem('selectedRoomId');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const bookingData = { checkInDate, checkOutDate, roomId, hotelId };
-    onSubmit(bookingData); 
+
+    try {
+      const response = await fetch('http://localhost:5001/api/booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          checkindate: checkInDate,
+          checkoutdate: checkOutDate,
+          status: "pending",
+          cust_id: localStorage.getItem('cust_id'),
+          room_id: roomId,
+          hotel_id: hotelId
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Server response:", data);
+
+      if (response.ok) {
+        alert("Booking successful!");
+
+        // Clear stored info
+        localStorage.removeItem('selectedHotelId');
+        localStorage.removeItem('selectedRoomId');
+        localStorage.removeItem('checkInDate');
+        localStorage.removeItem('checkOutDate');
+
+        // Navigate back to hotel search
+        setPage('hotelsearch');
+      } else {
+        alert("Booking failed: " + (data.message || JSON.stringify(data)));
+      }
+    } catch (error) {
+      console.error("Network or server error:", error);
+      alert("An error occurred. Check console for details.");
+    }
   };
 
   return (
     <div className="booking-container">
       <h2>Book a Room</h2>
 
-      
       <form className="booking-form" onSubmit={handleSubmit}>
+        <p><strong>Room ID:</strong> {roomId}</p>
+        <p><strong>Hotel ID:</strong> {hotelId}</p>
 
-      <label>Room ID:</label>
-        <input type="number" value={roomId} onChange={(e) => setRoomId(e.target.value)} required />
-
-        <label>Hotel ID:</label>
-        <input type="number" value={hotelId} onChange={(e) => setHotelId(e.target.value)} required />
-        
         <label>Check-in Date:</label>
-        <input type="date" value={checkInDate} onChange={(e) => setCheckInDate(e.target.value)} required />
+        <input
+          type="date"
+          value={checkInDate}
+          onChange={(e) => setCheckInDate(e.target.value)}
+          required
+        />
 
         <label>Check-out Date:</label>
-        <input type="date" value={checkOutDate} onChange={(e) => setCheckOutDate(e.target.value)} required />
-
-
+        <input
+          type="date"
+          value={checkOutDate}
+          onChange={(e) => setCheckOutDate(e.target.value)}
+          required
+        />
 
         <button type="submit" className="booking-btn">Submit</button>
       </form>
@@ -41,3 +81,4 @@ const BookingForm = ({ onSubmit }) => {
 };
 
 export default BookingForm;
+

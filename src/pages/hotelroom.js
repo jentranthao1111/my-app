@@ -28,9 +28,16 @@ const HotelRooms = ({ setPage, hotelId }) => {
   };
 
   const selectRoom = (roomId, hotelId) => {
-    // Save to localStorage or handle room selection logic
+    // Save booking data to localStorage
+    localStorage.setItem("selectedRoomId", roomId);
+    localStorage.setItem("selectedHotelId", hotelId);
+    localStorage.setItem("checkInDate", checkInDate);
+    localStorage.setItem("checkOutDate", checkOutDate);
+
     console.log("Room selected:", roomId, hotelId);
     // You could also redirect or set a page like `setPage('booking')`
+
+    setPage('booking');
   };
 
   return (
