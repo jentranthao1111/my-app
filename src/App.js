@@ -6,10 +6,15 @@ import Login from './pages/login';
 import MainPageEmployee from './pages/mainpageemployee';
 import SignUp from './pages/signup';
 import BookingPage from './pages/booking';
+import HotelRoom from './pages/hotelroom';
+import HotelSearch from './pages/hotelsearch';
+
+
 
 
 function App() {
-  const [page, setPage] = useState('login'); // Initial page state is 'login'
+  const [page, setPage] = useState('login'); 
+  const [selectedHotelId, setSelectedHotelId] = useState(null);
 
   return (
     <div className="App">
@@ -21,6 +26,8 @@ function App() {
         {page === 'mainpageuser' && <MainPageUser />}
         {page === 'mainpageemployee' && <MainPageEmployee />}
         {page === 'booking' && <BookingPage setPage={setPage} />}
+        {page === 'hotelroom' && <HotelRoom setPage={setPage} hotelId={selectedHotelId} />}
+        {page === 'hotelsearch' && <HotelSearch setPage={setPage} setSelectedHotelId={setSelectedHotelId} />}
       </div>
     </div>
   );
