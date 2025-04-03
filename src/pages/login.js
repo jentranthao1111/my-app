@@ -4,7 +4,6 @@ import './css/login.css';
 const Login = ({ setPage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
   const handleSubmit = async (e, role) => {
     e.preventDefault(); // Prevent default page reload
 
@@ -25,7 +24,7 @@ const Login = ({ setPage }) => {
         if (data.valid) {
           alert("Customer login successfully!");
           localStorage.setItem("cust_id", data.cust_id);
-          setPage('mainpageuser');
+          setPage('hotelsearch');
         } else {
           alert("Registration failed: " + (data.message || JSON.stringify(data)));
         }
@@ -73,7 +72,7 @@ const Login = ({ setPage }) => {
     <div className="login-container">
       <h2>Login</h2>
       <form className="login-form">
-        <label>Username:</label>
+        <label>Email:</label>
         <input type="text" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
         <label>Password:</label>
