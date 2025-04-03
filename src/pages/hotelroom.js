@@ -27,13 +27,53 @@ const HotelRooms = ({ setPage, hotelId }) => {
     }
   };
 
-  return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-3xl mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">{hotelName}</h2>
-      <p>Check-in: {checkInDate}</p>
-      <p>Check-out: {checkOutDate}</p>
+  const selectRoom = (roomId, hotelId) => {
+    // Save to localStorage or handle room selection logic
+    console.log("Room selected:", roomId, hotelId);
+    // You could also redirect or set a page like `setPage('booking')`
+  };
 
-      <button onClick={() => setPage('hotelsearch')} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">
+  return (
+    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-5xl mx-auto">
+      <h2 className="text-2xl font-semibold text-gray-700 mb-2">{hotelName}</h2>
+      <p className="mb-4">Check-in: {checkInDate} | Check-out: {checkOutDate}</p>
+
+      {rooms.length === 0 ? (
+        <p className="text-gray-500 italic">No rooms available for this hotel.</p>
+      ) : (
+        <table className="w-full text-left border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 px-4 py-2">Room View</th>
+              <th className="border border-gray-300 px-4 py-2">Price</th>
+              <th className="border border-gray-300 px-4 py-2">Amenity</th>
+              <th className="border border-gray-300 px-4 py-2 text-center">Booking</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rooms.map((room) => (
+              <tr key={room.room_id} className="border border-gray-300">
+                <td className="border px-4 py-2">{room.view}</td>
+                <td className="border px-4 py-2">${room.price}</td>
+                <td className="border px-4 py-2">{room.amenity}</td>
+                <td className="border bg-gray-500 px-4 py-2 text-center">
+                  <button
+                    onClick={() => selectRoom(room.room_id, hotelId)}
+                    className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-900"
+                  >
+                    Select
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <button
+        onClick={() => setPage('hotelsearch')}
+        className="mt-6 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600"
+      >
         Back to Hotels
       </button>
     </div>
