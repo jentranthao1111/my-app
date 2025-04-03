@@ -668,7 +668,7 @@ VALUES
 
 Delete From public.Booking;
 -- Insert data into Booking table
-INSERT INTO public.Booking (CheckInDate, CheckOutDate, Status, Cust_ID, Room_ID, Hotel_ID)
+INSERT INTO public.Booking ( CheckInDate, CheckOutDate, Status, Cust_ID, Room_ID, Hotel_ID)
 VALUES
    -- Hotel 17 (Budget Stay) - Rooms 301-305
     ('2025-05-01', '2025-05-05', 'Confirmed', 'CU0001', 3301, 17),

@@ -10,7 +10,14 @@ const BookingForm = ({ setPage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    const customerId = localStorage.getItem('cust_id');
+    console.log("Server response:", customerId);
+    if (!customerId) {
+      alert("Please log in before making a booking.");
+      return;
+    }
+  
     try {
       const response = await fetch('http://localhost:5001/api/booking', {
         method: 'POST',
@@ -20,26 +27,25 @@ const BookingForm = ({ setPage }) => {
         body: JSON.stringify({
           checkindate: checkInDate,
           checkoutdate: checkOutDate,
-          status: "pending",
-          cust_id: localStorage.getItem('cust_id'),
+          status: "Pending",
+          cust_id: customerId,
           room_id: roomId,
           hotel_id: hotelId
         }),
       });
-
+  
       const data = await response.json();
       console.log("Server response:", data);
-
+  
       if (response.ok) {
         alert("Booking successful!");
-
+  
         // Clear stored info
         localStorage.removeItem('selectedHotelId');
         localStorage.removeItem('selectedRoomId');
         localStorage.removeItem('checkInDate');
         localStorage.removeItem('checkOutDate');
-
-        // Navigate back to hotel search
+  
         setPage('hotelsearch');
       } else {
         alert("Booking failed: " + (data.message || JSON.stringify(data)));
@@ -49,6 +55,7 @@ const BookingForm = ({ setPage }) => {
       alert("An error occurred. Check console for details.");
     }
   };
+  
 
   return (
     <div className="booking-container">

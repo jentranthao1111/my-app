@@ -8,11 +8,11 @@ router.post("/booking", async (req, res) => {
     const { checkindate, checkoutdate, status, cust_id, room_id, hotel_id } = req.body;
 
     const newBooking = await db.query(
-      'INSERT INTO public."Booking" ("CheckInDate", "CheckOutDate", "Status", "Cust_ID", "Room_ID", "Hotel_ID") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      'INSERT INTO public.booking ("checkindate", "checkoutdate", "status", "cust_id", "room_id", "hotel_id") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [checkindate, checkoutdate, status, cust_id, room_id, hotel_id]
     );
 
-    res.json({ success: true, booking: newBooking.rows[0] });
+    res.json(newBooking.rows);
   } catch (err) {
     console.error("Insert booking error:", err.message);
     res.status(500).json({ success: false, message: err.message });
@@ -25,7 +25,7 @@ router.delete("/booking", async (req, res) => {
     const bookingID = req.body.booking_id;
 
     const deleteBooking = await db.query(
-      'DELETE FROM public."Booking" WHERE "Booking_ID" = $1', [bookingID]
+      'DELETE FROM public.booking WHERE "Booking_ID" = $1', [bookingID]
     );
     res.json({ success: true, message: "Booking was deleted" });
   } catch (err) {
@@ -37,7 +37,7 @@ router.delete("/booking", async (req, res) => {
 // Get all bookings
 router.get("/booking", async (req, res) => {
   try {
-    const allBookings = await db.query('SELECT * FROM public."Booking"');
+    const allBookings = await db.query('SELECT * FROM public.booking');
     res.json(allBookings.rows);
   } catch (err) {
     console.error("Fetch bookings error:", err.message);
