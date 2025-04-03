@@ -13,9 +13,11 @@ app.use(cors());
 const customerRoutes = require("../routes/customerRoutes");
 const employeeRoutes = require("../routes/employeeRoutes");
 const hotelRoutes = require("../routes/hotelRoutes");
+const hotelChainRoutes = require("../routes/hotelChainRoutes");
 app.use("/api", customerRoutes);
 app.use("/api", employeeRoutes);
 app.use("/api", hotelRoutes);
+app.use("/api", hotelChainRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
