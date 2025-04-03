@@ -33,7 +33,7 @@ const HotelRooms = ({ setPage, hotelId }) => {
       <p>Check-in: {checkInDate}</p>
       <p>Check-out: {checkOutDate}</p>
 
-      <button onClick={() => setPage('search')} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">
+      <button onClick={() => setPage('hotelsearch')} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">
         Back to Hotels
       </button>
     </div>
