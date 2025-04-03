@@ -24,7 +24,7 @@ const Login = ({ setPage }) => {
         if (data.valid) {
           alert("Customer login successfully!");
           localStorage.setItem("cust_id", data.cust_id);
-          setPage('hotelsearch');
+          setPage('mainpageuser');
         } else {
           alert("Registration failed: " + (data.message || JSON.stringify(data)));
         }

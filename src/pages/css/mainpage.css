@@ -1,33 +1,4 @@
 /* Main Page */
-.main-page {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
-
-.hero-section {
-  background-color: #f3f3f3;
-  padding: 20px;
-  margin-bottom: 30px;
-}
-
-h1 {
-  color: #333;
-}
-
-.search-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  font-weight: bold;
-}
 
 input,
 select {
@@ -52,36 +23,97 @@ button:hover {
   background-color: #005f72;
 }
 
-.available-rooms {
-  margin-top: 30px;
+.booking-slider-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
 }
 
-.room-item {
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.room-item h3 {
-  margin: 0;
-  color: #333;
-}
-
-.room-item p {
-  color: #555;
-}
-
-footer {
-  margin-top: 50px;
-  text-align: center;
+.booking-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
   padding: 10px;
-  background-color: #333;
-  color: white;
+  gap: 16px;
 }
+
+.booking-card {
+  min-width: 280px;
+  max-width: 300px;
+  flex: 0 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.scroll-btn {
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  font-size: 24px;
+  padding: 12px 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background-color: #005f72;
+}
+
+.scroll-btn.left {
+  margin-right: 10px;
+}
+
+.scroll-btn.right {
+  margin-left: 10px;
+}
+
+.hotel-search-section {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.search-hotel-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-hotel-btn:hover {
+  background-color: #45a049;
+}
+
 .error-message {
   color: red;
   font-weight: bold;
   margin-top: 10px;
+}
+
+.booking-slider-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* This prevents expanding outside */
+  width: 100%;
+  max-width: 100%;
+}
+
+.booking-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 10px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }

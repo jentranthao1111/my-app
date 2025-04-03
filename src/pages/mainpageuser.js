@@ -1,114 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import './css/mainpage.css';
 import axios from 'axios';
-import Booking from './booking'; // Ensure this path is correct
 
-
-const MainPage = () => {
-  const [hotelChains, setHotelChains] = useState([]);
-  const [hotels, setHotels] = useState([]);
-  const [rooms, setRooms] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState('main');
-
-
-
+const MainPage = ({ setPage }) => {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const userId = localStorage.getItem('cust_id');
 
   useEffect(() => {
-    // Fetch hotel chains
-    axios.get('/api/hotelChains')
-      .then(response => setHotelChains(response.data))
-      .catch(error => console.log(error));
+    fetchBookings();
+  }, [userId]);
 
-    // Fetch hotels based on search query (could be hotel name, category, etc.)
-    if (searchQuery) {
-      axios.get(`/api/hotels/search?query=${searchQuery}`)
-        .then(response => setHotels(response.data))
-        .catch(error => console.log(error));
-    } else {
-      axios.get('/api/hotels')
-        .then(response => setHotels(response.data))
-        .catch(error => console.log(error));
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5001/api/booking/cust_id/${userId}`);
+      setBookings(response.data);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load bookings.');
+    } finally {
+      setLoading(false);
     }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    // Fetch rooms for the first hotel chain or selected hotel
-    if (hotels.length > 0) {
-      axios.get(`/api/rooms?hotelId=${hotels[0].Hotel_ID}`)
-        .then(response => setRooms(response.data))
-        .catch(error => console.log(error));
-    }
-  }, [hotels]);
-  
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
   };
 
-  if (page === 'booking') {
-    return <Booking />;
-  }
+  const cancelBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+  
+    try {
+      const response = await fetch(`http://localhost:5001/api/booking/${bookingId}`, {
+        method: 'DELETE',
+      });
+  
+      const data = await response.json();
+      console.log("Server response:", data);
+  
+      if (response.ok) {
+        alert("Booking deleted");
+        fetchBookings(); // refresh the list of bookings
+      } else {
+        alert("Failed to delete booking: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting booking", error);
+      alert("An error occurred while deleting the booking.");
+    }
+  };
+
+  const scrollSlider = (direction) => {
+    const slider = document.getElementById("booking-slider");
+    const scrollAmount = 300;
+    if (slider) {
+      slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   return (
-    <div>
-      <h1>Hotel Booking System</h1>
+    <div className="main-page">
+      <h1>Your Hotel Bookings</h1>
 
-      {/* Search bar */}
-      <input
-        type="text"
-        placeholder="Search for hotels or chains..."
-        value={searchQuery}
-        onChange={handleSearchChange}
-      />
+      {loading && <p>Loading bookings...</p>}
+      {error && <p className="error-message">{error}</p>}
 
-      {/* List of Hotel Chains */}
-      <h2>Hotel Chains</h2>
-      <ul>
-        {hotelChains.map((chain) => (
-          <li key={chain.Hotel_chain_ID}>
-            {chain.Address} - {chain.Num_hotels} Hotels
-          </li>
-        ))}
-      </ul>
+      {!loading && bookings.length === 0 && (
+        <p>You haven't booked any hotels yet.</p>
+      )}
 
-      {/* List of Hotels */}
-      <h2>Hotels</h2>
-      <ul>
-        {hotels.map((hotel) => (
-          <li key={hotel.Hotel_ID}>
-            <h3>{hotel.Email} - {hotel.Category}</h3>
-            <p>{hotel.Phone}</p>
-            <button onClick={() => {}}>View Rooms</button>
-          </li>
-        ))}
-      </ul>
+      {bookings.length > 0 && (
+        <div className="booking-slider-wrapper">
+          <button className="scroll-btn left" onClick={() => scrollSlider(-1)}>&lt;</button>
 
-      {/* List of Rooms in the Selected Hotel */}
-      <h2>Rooms</h2>
-      <ul>
-        {rooms.map((room) => (
-          <li key={room.Room_ID}>
-            <p>Room {room.Room_ID}</p>
-            <p>Price: ${room.Price}</p>
-            <p>Amenities: {room.Amenity}</p>
-            <p>Capacity: {room.Capacity}</p>
-            <p>View: {room.View}</p>
-            <p>Extension: {room.Extension ? 'Yes' : 'No'}</p>
-            <p>Damage: {room.Damage ? 'Yes' : 'No'}</p>
-          </li>
-        ))}
-      </ul>
-      <div className="book-room-section">
-  <h2>Book a Room</h2>
-  <button onClick={() => setPage('booking')} className="book-room-btn">
-  Go to Booking
-</button>
-</div>
+          <div className="booking-slider" id="booking-slider">
+            {bookings.map((booking) => (
+              <div key={booking.Booking_ID} className="booking-card">
+                <h3>{booking.Hotel_Name || "Hotel #" + booking.hotel_id}</h3>
+                <p><strong>Room:</strong> {booking.room_id}</p>
+                <p><strong>Check-in:</strong> {new Date(booking.checkindate).toISOString().split("T")[0]}</p>
+                <p><strong>Check-out:</strong> {new Date(booking.checkoutdate).toISOString().split("T")[0]}</p>
+                <p><strong>Status:</strong> {booking.status}</p>
+                <button className="cancel-btn" onClick={() => cancelBooking(booking.Booking_ID)}>
+                  Cancel Booking
+                </button>
+              </div>
+            ))}
+          </div>
 
+          <button className="scroll-btn right" onClick={() => scrollSlider(1)}>&gt;</button>
+        </div>
+      )}
+
+      <div className="hotel-search-section">
+        <h2>Want to book a new room?</h2>
+        <button onClick={() => setPage('hotelsearch')} className="search-hotel-btn">
+          Search Hotels
+        </button>
+      </div>
     </div>
-    
   );
 };
 

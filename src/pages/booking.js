@@ -46,7 +46,7 @@ const BookingForm = ({ setPage }) => {
         localStorage.removeItem('checkInDate');
         localStorage.removeItem('checkOutDate');
   
-        setPage('hotelsearch');
+        setPage('mainpageuser');
       } else {
         alert("Booking failed: " + (data.message || JSON.stringify(data)));
       }

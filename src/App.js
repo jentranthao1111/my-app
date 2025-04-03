@@ -23,7 +23,7 @@ function App() {
       <div className="content">
         {page === 'login' && <Login setPage={setPage} />}
         {page === 'signup' && <SignUp setPage={setPage} />} 
-        {page === 'mainpageuser' && <MainPageUser />}
+        {page === 'mainpageuser' && <MainPageUser setPage={setPage} />}
         {page === 'mainpageemployee' && <MainPageEmployee />}
         {page === 'booking' && <BookingPage setPage={setPage} />}
         {page === 'hotelroom' && <HotelRoom setPage={setPage} hotelId={selectedHotelId} />}
