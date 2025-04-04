@@ -13,7 +13,7 @@ import HotelSearch from './pages/hotelsearch';
 
 
 function App() {
-  const [page, setPage] = useState('login'); 
+  const [page, setPage] = useState('mainpageemployee'); 
   const [selectedHotelId, setSelectedHotelId] = useState(null);
 
   return (
@@ -24,7 +24,7 @@ function App() {
         {page === 'login' && <Login setPage={setPage} />}
         {page === 'signup' && <SignUp setPage={setPage} />} 
         {page === 'mainpageuser' && <MainPageUser setPage={setPage} />}
-        {page === 'mainpageemployee' && <MainPageEmployee />}
+        {page === 'mainpageemployee' && <MainPageEmployee setPage={setPage} />}
         {page === 'booking' && <BookingPage setPage={setPage} />}
         {page === 'hotelroom' && <HotelRoom setPage={setPage} hotelId={selectedHotelId} />}
         {page === 'hotelsearch' && <HotelSearch setPage={setPage} setSelectedHotelId={setSelectedHotelId} />}

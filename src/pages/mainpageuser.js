@@ -26,7 +26,7 @@ const MainPage = ({ setPage }) => {
 
   const cancelBooking = async (bookingId) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;
-  
+    console.log("booking to be deleted:", bookingId);
     try {
       const response = await fetch(`http://localhost:5001/api/booking/${bookingId}`, {
         method: 'DELETE',

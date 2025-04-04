@@ -2,87 +2,69 @@ import React, { useState, useEffect } from 'react';
 import './css/mainpage.css';
 import axios from 'axios';
 
-const MainPageEmployee = ({ setPage }) => { // Accept setPage as a prop
-  const [customers, setCustomers] = useState([]);
-  const [custID, setCustID] = useState('');
-  const [hotelID, setHotelID] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+const MainPageEmployee = ({ setPage }) => {
+  const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    // Fetch customers
-    axios.get('/api/customers')
-      .then(response => setCustomers(response.data))
+    // Fetch bookings from DB
+    axios.get('/api/bookings') // Replace with your real API
+      .then(response => setBookings(response.data))
       .catch(error => console.log(error));
   }, []);
 
-  const handleBooking = (e) => {
-    e.preventDefault();
-    if (!custID || !hotelID || !startDate || !endDate) {
-      alert('Please fill in all fields.');
-      return;
-    }
+  const handleRent = (bookingId) => {
+    axios.post(`/api/bookings/${bookingId}/rent`)
+      .then(() => {
+        alert('Booking rented!');
+        return axios.get('/api/bookings');
+      })
+      .then(response => setBookings(response.data))
+      .catch(error => console.error('Error renting:', error));
+  };
 
-    // Mock submission
-    console.log('Booking Details:', { custID, hotelID, startDate, endDate });
-
-    // Reset form
-    setCustID('');
-    setHotelID('');
-    setStartDate('');
-    setEndDate('');
-
-    alert('Booking successful!');
+  const handleCancel = (bookingId) => {
+    axios.delete(`/api/bookings/${bookingId}`)
+      .then(() => {
+        alert('Booking cancelled!');
+        return axios.get('/api/bookings');
+      })
+      .then(response => setBookings(response.data))
+      .catch(error => console.error('Error cancelling:', error));
   };
 
   return (
     <div className="main-page">
       <h1>Employee Booking Portal</h1>
 
-      <h2>Make a Booking</h2>
-      <form onSubmit={handleBooking} className="booking-form">
-        <div className="form-group">
-          <label>Customer ID:</label>
-          <input
-            type="text"
-            value={custID}
-            onChange={(e) => setCustID(e.target.value)}
-            placeholder="Enter Customer ID"
-          />
-        </div>
+      {/* 🔹 Booking List */}
+      <h2>Manage Bookings</h2>
+      <div className="booking-list">
+        {bookings.length > 0 ? (
+          <ul>
+            {bookings.map(booking => (
+              <li key={booking.id} className="booking-item">
+                <span>
+                  {`Customer: ${booking.customerName} | Hotel: ${booking.hotelName} | Dates: ${booking.startDate} - ${booking.endDate}`}
+                </span>
+                <button className="rent-button" onClick={() => handleRent(booking.id)}>Rent</button>
+                <button className="cancel-button" onClick={() => handleCancel(booking.id)}>Cancel</button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No bookings available.</p>
+        )}
+      </div>
 
-        <div className="form-group">
-          <label>Hotel ID:</label>
-          <input
-            type="text"
-            value={hotelID}
-            onChange={(e) => setHotelID(e.target.value)}
-            placeholder="Enter Hotel ID"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Start Date:</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>End Date:</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-        </div>
-
-        <button type="submit" className="book-button">Book</button>
-      </form>
-
-      <div className="book-room-section">
+      {/*  Label and Navigation Button */}
+      <div className="navigate-button-wrapper" style={{ marginTop: '2rem' }}>
+        <h2 className="text-xl font-semibold mb-2">Make a Booking</h2>
+        <button
+          onClick={() => setPage('hotelroom')}
+          className="go-to-rooms-button"
+        >
+          Go to Hotel Rooms
+        </button>
       </div>
     </div>
   );
