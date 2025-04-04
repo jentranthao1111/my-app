@@ -42,14 +42,24 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
 
   const handleRent = async (bookingId) => {
     try {
-      await axios.post(`http://localhost:5001/api/bookings/${bookingId}/rent`);
-      alert('Booking rented!');
-      fetchBookings(localHotelId);
+      const response = await axios.post(`http://localhost:5001/api/bookings/${bookingId}/rent`, {}, {
+        headers: {
+          'x-employee-id': localStorage.getItem('ssn_sid') 
+        }
+      });
+      
+      if (response.status === 200) {
+        alert('Booking successfully converted to renting and confirmed!');
+        fetchBookings(localHotelId); // refresh the booking list
+      } else {
+        alert('Unexpected response from server while renting.');
+      }
     } catch (error) {
-      console.error('Error renting:', error);
-      alert('Failed to rent booking.');
+      console.error('Error renting booking:', error);
+      alert('Failed to rent booking. Please try again.');
     }
   };
+  
 
   const handleCancel = async (bookingId) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;

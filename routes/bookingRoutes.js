@@ -91,4 +91,5 @@ router.get("/booking/hotel_id/:hotel_id", async (req, res) => {
   }
 });
 
+
 module.exports = router;
