@@ -80,26 +80,27 @@ EXECUTE FUNCTION prevent_room_rented_and_booked();
 
 -- 2e.
 -- Index on Booking (Room_ID, CheckInDate, CheckOutDate)
+Drop index if exists idx_booking_room_dates;
 CREATE INDEX idx_booking_room_dates
 ON public.Booking (Room_ID, CheckInDate, CheckOutDate);
 
--- SELECT * FROM public.Booking 
--- WHERE Room_ID = ?
--- AND (CheckInDate BETWEEN ? AND ? OR CheckOutDate BETWEEN ? AND ?);
+select * from public.booking;
+
+SELECT * FROM public.Booking 
+WHERE Room_ID = '111'
+AND (CheckInDate BETWEEN '2025-05-01' AND '2025-06-01' OR CheckOutDate BETWEEN '2025-05-01' AND '2025-06-01');
 
 
--- Index on Customer (Full_Name)
+drop index if exists idx_customer_name;
 CREATE INDEX idx_customer_name
-ON public.Customer (Full_Name);
-SELECT * FROM public.Customer WHERE Full_Name = 'John Doe';
+ON public.Customer (full_name);
+SELECT * FROM public.Customer WHERE full_name = 'John Doe';
 
 
---Composite Index on Room (Hotel_ID, Price, Capacity)
+drop index if exists idx_room_hotel_price_capacity;
 CREATE INDEX idx_room_hotel_price_capacity
 ON public.Room (Hotel_ID, Price, Capacity);
-
--- SELECT * FROM public.Room 
--- WHERE Hotel_ID = ? AND Price BETWEEN ? AND ? AND Capacity >= ?;
+SELECT * FROM public.Room WHERE Hotel_ID = 1 AND Price BETWEEN 100 AND 400 AND Capacity >= 2;
 
 
 
