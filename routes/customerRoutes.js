@@ -58,7 +58,7 @@ router.post("/customer/validate", async (req, res) => {
       );
   
       if (result.rows.length > 0) {
-        res.status(200).json({ valid: true, cust_id: result.rows[0].cust_id }); // 💡 consistent
+        res.status(200).json({ valid: true, cust_id: result.rows[0].cust_id }); 
       } else {
         res.status(200).json({ valid: false });
       }
