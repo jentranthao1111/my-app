@@ -6,12 +6,7 @@ export default function Navbar() {
     <nav className="nav">
       <a href="/" className="site-title">Hotel E-Commerce</a>
       <ul className="nav-links">
-        <li>
-        <a href="/hotel.html">Hotel Search</a>
-        </li>
-        <li>
-          <a href="/suits">Suites</a>
-        </li>
+       
       </ul>
     </nav>
   );
