@@ -13,7 +13,7 @@ import HotelSearch from './pages/hotelsearch';
 
 
 function App() {
-  const [page, setPage] = useState('mainpageemployee'); 
+  const [page, setPage] = useState('login'); 
   const [selectedHotelId, setSelectedHotelId] = useState(null);
 
   return (
