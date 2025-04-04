@@ -716,23 +716,45 @@ VALUES
 
 
 	
--- CREATE VIEW public.AvailableRoomsPerArea AS
--- SELECT 
---     h.Hotel_ID,
---     h.Hotel_chain_ID,
---     h.Category,
---     COUNT(r.Room_ID) AS Available_Rooms
--- FROM public.Room r
--- JOIN public.Hotel h ON r.Hotel_ID = h.Hotel_ID
--- LEFT JOIN public.Booking b ON r.Room_ID = b.Room_ID 
---     AND b.Status IN ('Pending', 'Confirmed') 
---     AND CURRENT_DATE BETWEEN b.CheckInDate AND b.CheckOutDate
--- LEFT JOIN public.Renting rt ON r.Room_ID = rt.Room_ID 
---     AND rt.Status = 'Ongoing'
--- WHERE b.Booking_ID IS NULL AND rt.Renting_ID IS NULL
--- GROUP BY h.Hotel_ID, h.Hotel_chain_ID, h.Category;
 
--- SELECT * FROM public.AvailableRoomsPerArea; 
+CREATE OR REPLACE FUNCTION public.prevent_overlapping_bookings()
+RETURNS trigger AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM public.booking
+    WHERE room_id = NEW.room_id
+      AND hotel_id = NEW.hotel_id
+      AND booking_id != NEW.booking_id -- 👈 ignore the same booking
+      AND (
+        (NEW.checkindate BETWEEN checkindate AND checkoutdate)
+        OR
+        (NEW.checkoutdate BETWEEN checkindate AND checkoutdate)
+        OR
+        (checkindate BETWEEN NEW.checkindate AND NEW.checkoutdate)
+      )
+  ) THEN
+    RAISE EXCEPTION 'Room % is already booked for the selected dates.', NEW.room_id;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION public.prevent_room_rented_and_booked()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM Booking
+        WHERE Room_ID = NEW.Room_ID
+          AND Status = 'Confirmed'
+          AND NEW.startdate < Booking.checkoutdate
+          AND NEW.enddate > Booking.checkindate
+    ) THEN
+        RAISE EXCEPTION 'Room is already booked for the selected dates';
+    END IF;
+    RETURN NEW;
+END;
+$$;
 
 

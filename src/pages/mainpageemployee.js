@@ -25,7 +25,7 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
       const response = await axios.get(`http://localhost:5001/api/employee/hotel_fid/${empID}`);
       const fetchedId = response.data.hotel_id;
       setLocalHotelId(fetchedId);
-      setSelectedHotelId(fetchedId); // Send hotel ID up to App
+      setSelectedHotelId(fetchedId);
     } catch (err) {
       console.error("Error fetching hotel ID:", err);
     }
@@ -40,26 +40,31 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
     }
   };
 
-  const handleRent = async (bookingId) => {
+  const handleRent = async (booking) => {
     try {
-      const response = await axios.post(`http://localhost:5001/api/bookings/${bookingId}/rent`, {}, {
-        headers: {
-          'x-employee-id': localStorage.getItem('ssn_sid') 
-        }
+      const response = await axios.post(`http://localhost:5001/api/renting`, {
+        startdate: booking.checkindate,
+        enddate: booking.checkoutdate,
+        status: "Ongoing",
+        payment: booking.total_payment,
+        employ_sid: localStorage.getItem("ssn_sid"),
+        cust_id: booking.cust_id,
+        room_id: booking.room_id,
+        hotel_id: booking.hotel_id,
       });
-      
+
       if (response.status === 200) {
-        alert('Booking successfully converted to renting and confirmed!');
-        fetchBookings(localHotelId); // refresh the booking list
+        await axios.put(`http://localhost:5001/api/booking/${booking.booking_id}/confirm`);
+        alert("Booking successfully converted to renting and confirmed!");
+        fetchBookings(localHotelId);
       } else {
-        alert('Unexpected response from server while renting.');
+        alert("Unexpected response from server while renting.");
       }
     } catch (error) {
-      console.error('Error renting booking:', error);
-      alert('Failed to rent booking. Please try again.');
+      console.error("Error renting booking:", error.response?.data || error);
+      alert("Failed to rent booking. Please try again.");
     }
   };
-  
 
   const handleCancel = async (bookingId) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;
@@ -70,8 +75,6 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
       });
 
       const data = await response.json();
-      console.log("Server response:", data);
-
       if (response.ok) {
         alert("Booking deleted");
         fetchBookings(localHotelId);
@@ -93,7 +96,7 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
       alert('Customer ID cannot be empty');
       return;
     }
-  
+
     try {
       const response = await axios.get(`http://localhost:5001/api/customer/cust_id/${customerId}`);
       if (response.data.exists) {
@@ -107,14 +110,12 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
       alert("Failed to validate customer ID.");
     }
   };
-  
 
   return (
     <div className="main-page">
       <h1>Employee Booking Portal</h1>
       <h2>Book For Customer</h2>
 
-      {/* Top Bar: Customer ID input + Save + Go to Hotel Rooms */}
       <div className="top-bar" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
         <input
           type="text"
@@ -125,16 +126,11 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
           style={{ padding: '0.5rem', borderRadius: '4px' }}
         />
         <button onClick={handleSaveCustomerId}>Save Customer ID</button>
-        <button
-          onClick={handleGoToRooms}
-          className="go-to-rooms-button"
-          disabled={!localHotelId}
-        >
+        <button onClick={handleGoToRooms} className="go-to-rooms-button" disabled={!localHotelId}>
           Go to Hotel Rooms
         </button>
       </div>
 
-      {/* Booking List Section */}
       <h2>Manage Bookings</h2>
       <div className="booking-list">
         {localHotelId ? (
@@ -145,7 +141,7 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
                   <span>
                     {`Customer ID: ${booking.cust_id} | Hotel: ${booking.hotel_name} | Dates: ${booking.checkindate?.substring(0, 10)} - ${booking.checkoutdate?.substring(0, 10)}`}
                   </span>
-                  <button className="rent-button" onClick={() => handleRent(booking.booking_id)}>Rent</button>
+                  <button className="rent-button" onClick={() => handleRent(booking)}>Rent</button>
                   <button className="cancel-button" onClick={() => handleCancel(booking.booking_id)}>Cancel</button>
                 </li>
               ))}
@@ -162,4 +158,3 @@ const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
 };
 
 export default MainPageEmployee;
-

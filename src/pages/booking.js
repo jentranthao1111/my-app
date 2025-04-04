@@ -7,6 +7,7 @@ const BookingForm = ({ setPage }) => {
 
   const hotelId = localStorage.getItem('selectedHotelId');
   const roomId = localStorage.getItem('selectedRoomId');
+  const role = localStorage.getItem("userRole");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,8 +46,14 @@ const BookingForm = ({ setPage }) => {
         localStorage.removeItem('selectedRoomId');
         localStorage.removeItem('checkInDate');
         localStorage.removeItem('checkOutDate');
-  
-        setPage('mainpageuser');
+
+        if (role === "employee") {
+          setPage("mainpageemployee");
+        } else if (role === "customer") {
+          setPage("mainpageuser");
+        } else {
+          setPage("login");
+        }
       } else {
         alert("Booking failed: " + (data.message || JSON.stringify(data)));
       }

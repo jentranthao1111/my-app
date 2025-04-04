@@ -24,6 +24,7 @@ const Login = ({ setPage }) => {
         if (data.valid) {
           alert("Customer login successfully!");
           localStorage.setItem("cust_id", data.cust_id);
+          localStorage.setItem("userRole", "customer"); 
           setPage('mainpageuser');
         } else {
           alert("Registration failed: " + (data.message || JSON.stringify(data)));
@@ -52,6 +53,7 @@ const Login = ({ setPage }) => {
         if (data.valid) {
           alert("Employee login successfully!");
           localStorage.setItem("ssn_sid", data.employeeID);
+          localStorage.setItem("userRole", "employee");
           setPage('mainpageemployee');
         } else {
           alert("Registration failed: " + (data.message || JSON.stringify(data)));

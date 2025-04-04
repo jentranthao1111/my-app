@@ -91,5 +91,17 @@ router.get("/booking/hotel_id/:hotel_id", async (req, res) => {
   }
 });
 
+// Update booking status
+router.put("/booking/:id/confirm", async (req, res) => {
+  const bookingId = req.params.id;
+  try {
+    await db.query(`UPDATE booking SET status = 'Confirmed' WHERE booking_id = $1`, [bookingId]);
+    res.json({ success: true, message: "Booking status updated to Confirmed" });
+  } catch (err) {
+    console.error("Error confirming booking:", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 
 module.exports = router;
