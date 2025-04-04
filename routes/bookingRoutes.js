@@ -25,8 +25,7 @@ router.delete("/booking/:id", async (req, res) => {
     const bookingID = req.params.id;
 
     const deleteBooking = await db.query(
-      'DELETE FROM booking WHERE "booking_id" = $1',
-      [bookingID]
+      'DELETE FROM booking WHERE booking_id = $1', [bookingID]
     );
 
     res.json({ success: true, message: "Booking was deleted" });
@@ -35,6 +34,7 @@ router.delete("/booking/:id", async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to delete booking" });
   }
 });
+
 
 // Get all bookings
 router.get("/booking", async (req, res) => {

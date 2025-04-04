@@ -26,12 +26,12 @@ const MainPage = ({ setPage }) => {
 
   const cancelBooking = async (bookingId) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;
-  
+    console.log("Booking ID to cancel:", bookingId);
     try {
       const response = await fetch(`http://localhost:5001/api/booking/${bookingId}`, {
         method: 'DELETE',
       });
-  
+      
       const data = await response.json();
       console.log("Server response:", data);
   
@@ -72,13 +72,13 @@ const MainPage = ({ setPage }) => {
 
           <div className="booking-slider" id="booking-slider">
             {bookings.map((booking) => (
-              <div key={booking.Booking_ID} className="booking-card">
+              <div key={booking.booking_id} className="booking-card">
                 <h3>{booking.Hotel_Name || "Hotel #" + booking.hotel_id}</h3>
                 <p><strong>Room:</strong> {booking.room_id}</p>
                 <p><strong>Check-in:</strong> {new Date(booking.checkindate).toISOString().split("T")[0]}</p>
                 <p><strong>Check-out:</strong> {new Date(booking.checkoutdate).toISOString().split("T")[0]}</p>
                 <p><strong>Status:</strong> {booking.status}</p>
-                <button className="cancel-btn" onClick={() => cancelBooking(booking.Booking_ID)}>
+                <button className="cancel-btn" onClick={() => cancelBooking(booking.booking_id)}>
                   Cancel Booking
                 </button>
               </div>
