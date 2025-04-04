@@ -14,12 +14,14 @@ const customerRoutes = require("../routes/customerRoutes");
 const employeeRoutes = require("../routes/employeeRoutes");
 const hotelRoutes = require("../routes/hotelRoutes");
 const hotelChainRoutes = require("../routes/hotelChainRoutes");
-const bookingRoutes = require("../routes/bookingRoutes")
+const bookingRoutes = require("../routes/bookingRoutes");
+const rentingRoutes = require("../routes/rentingRoutes");
 app.use("/api", customerRoutes);
 app.use("/api", employeeRoutes);
 app.use("/api", hotelRoutes);
 app.use("/api", hotelChainRoutes);
 app.use("/api", bookingRoutes);
+app.use("/api", rentingRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
