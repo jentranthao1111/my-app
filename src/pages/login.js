@@ -51,7 +51,7 @@ const Login = ({ setPage }) => {
     
         if (data.valid) {
           alert("Employee login successfully!");
-          localStorage.setItem("ssn_sid", data.ss_sid);
+          localStorage.setItem("ssn_sid", data.employeeID);
           setPage('mainpageemployee');
         } else {
           alert("Registration failed: " + (data.message || JSON.stringify(data)));

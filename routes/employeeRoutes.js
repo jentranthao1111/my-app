@@ -87,7 +87,7 @@ router.put("/employee/fullname", async(req, res)=>{
 
 // update employee email
 
-router.put("/customer/email", async(req, res)=>{
+router.put("/employee/email", async(req, res)=>{
     try{
         const employeeID = req.body.ssn_sid;
         const email = req.body.email;
@@ -99,6 +99,27 @@ router.put("/customer/email", async(req, res)=>{
     }
 })
 
-//
+// get employee hotel id
+
+router.get("/employee/hotel_fid/:ssn_sid", async (req, res) => {
+    try {
+      const { ssn_sid } = req.params;
+  
+      const result = await db.query(
+        'SELECT hotel_fid FROM employee WHERE ssn_sid = $1',
+        [ssn_sid]
+      );
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, message: "Employee not found" });
+      }
+  
+      res.json({ hotel_id: result.rows[0].hotel_fid });
+    } catch (err) {
+      console.error("Fetch hotel_id error:", err.message);
+      res.status(500).json({ success: false, message: "Failed to fetch hotel_id" });
+    }
+  });
+  
 
 module.exports = router;

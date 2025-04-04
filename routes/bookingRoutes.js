@@ -67,4 +67,28 @@ router.get("/booking/cust_id/:cust_id", async (req, res) => {
   }
 });
 
+//get bookings for hotels
+router.get("/booking/hotel_id/:hotel_id", async (req, res) => {
+  try {
+    const { hotel_id } = req.params;
+
+    const result = await db.query(
+      `SELECT b.*, h.hotel_name AS hotel_name
+       FROM public.booking b
+       JOIN public.hotel h ON b.hotel_id = h.hotel_id
+       WHERE b.hotel_id = $1`,
+      [hotel_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "No bookings found for this hotel." });
+    }
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Fetch hotel bookings error:", err.message);
+    res.status(500).json({ success: false, message: "Failed to fetch hotel bookings" });
+  }
+});
+
 module.exports = router;
