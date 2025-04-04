@@ -5,7 +5,7 @@ const Login = ({ setPage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleSubmit = async (e, role) => {
-    e.preventDefault(); // Prevent default page reload
+    e.preventDefault(); 
 
     if (role === 'user') {
       // authenticate sign in as user

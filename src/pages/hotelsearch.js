@@ -53,8 +53,8 @@ const HotelSearch = ({ setPage, setSelectedHotelId }) => {
 
     localStorage.setItem("checkInDate", checkInDate);
     localStorage.setItem("checkOutDate", checkOutDate);
-    setSelectedHotelId(hotel.hotel_id); // Save hotel ID
-    setPage("hotelroom"); // Navigate to hotel rooms
+    setSelectedHotelId(hotel.hotel_id);
+    setPage("hotelroom");
   };
 
   const setDefaultDates = () => {
