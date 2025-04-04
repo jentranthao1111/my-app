@@ -35,7 +35,7 @@ const SignUp = ({ setPage }) => {
   
       if (response.ok) {
         alert("Customer registered successfully!");
-        setPage('mainpageuser');
+        handleLoginRedirect();
       } else {
         alert("Registration failed: " + (data.message || JSON.stringify(data)));
       }
