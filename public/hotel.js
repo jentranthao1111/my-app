@@ -103,11 +103,9 @@ function displayHotels(hotels) {
             console.log("Check-in Date:", checkInDate);
             console.log("Check-out Date:", checkOutDate);
 
-            // ✅ Store check-in and check-out dates in localStorage
             localStorage.setItem("checkInDate", checkInDate);
             localStorage.setItem("checkOutDate", checkOutDate);
 
-            // ✅ Navigate to hotel_room.html after storing data
             window.location.href = `hotel_room.html?id=${hotel.hotel_id}`;
         });
 

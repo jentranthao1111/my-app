@@ -108,15 +108,12 @@ function displayRooms(rooms) {
 
 
 function clearPageAndGoBack() {
-    // ✅ Clear only relevant booking data from localStorage
     localStorage.removeItem("selectedHotelId");
     localStorage.removeItem("checkInDate");
     localStorage.removeItem("checkOutDate");
 
-    // ✅ (Optional) If you also store selected rooms, clear them
     localStorage.removeItem("selectedRoomId");
 
-    // ✅ Go back to the previous page
     window.location.href = "hotel.html"; // Change this to your hotel listing page
 }
 
@@ -132,5 +129,5 @@ function selectRoom(roomId, hotelId) {
     localStorage.setItem("checkOutDate", checkOutDate);
 
     // Redirect to booking page
-    window.location.href = "booking.js"; // Change to your actual booking page
+    window.location.href = "booking.js"; 
 }

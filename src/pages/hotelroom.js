@@ -35,7 +35,6 @@ const HotelRooms = ({ setPage, hotelId }) => {
     localStorage.setItem("checkOutDate", checkOutDate);
 
     console.log("Room selected:", roomId, hotelId);
-    // You could also redirect or set a page like `setPage('booking')`
 
     setPage('booking');
   };

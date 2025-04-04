@@ -47,7 +47,7 @@ const SignUp = ({ setPage }) => {
 
   // Handle Login Redirect
   const handleLoginRedirect = () => {
-    setPage('login'); // Go back to login page (if using state-based navigation)
+    setPage('login'); // Go back to login page 
   };
   
 
