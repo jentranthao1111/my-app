@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './css/mainpage.css';
 import axios from 'axios';
 
-const MainPageEmployee = ({ setPage }) => {
+const MainPageEmployee = ({ setPage, setSelectedHotelId }) => {
   const [bookings, setBookings] = useState([]);
-  const [hotelID, setHotelID] = useState(null);
+  const [localHotelId, setLocalHotelId] = useState(null);
+  const [customerId, setCustomerId] = useState(localStorage.getItem('cust_id') || '');
   const employeeID = localStorage.getItem('ssn_sid');
 
   useEffect(() => {
@@ -14,24 +15,25 @@ const MainPageEmployee = ({ setPage }) => {
   }, [employeeID]);
 
   useEffect(() => {
-    if (hotelID) {
-      fetchBookings(hotelID);
+    if (localHotelId) {
+      fetchBookings(localHotelId);
     }
-  }, [hotelID]);
+  }, [localHotelId]);
 
   const fetchHotelID = async (empID) => {
     try {
       const response = await axios.get(`http://localhost:5001/api/employee/hotel_fid/${empID}`);
-      setHotelID(response.data.hotel_id);
-      console.log(response);
+      const fetchedId = response.data.hotel_id;
+      setLocalHotelId(fetchedId);
+      setSelectedHotelId(fetchedId); // Send hotel ID up to App
     } catch (err) {
       console.error("Error fetching hotel ID:", err);
     }
   };
 
-  const fetchBookings = async (hotelIDParam) => {
+  const fetchBookings = async (hotelID) => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/booking/hotel_id/${hotelIDParam}`);
+      const response = await axios.get(`http://localhost:5001/api/booking/hotel_id/${hotelID}`);
       setBookings(response.data);
     } catch (err) {
       console.error("Error fetching bookings:", err);
@@ -42,7 +44,7 @@ const MainPageEmployee = ({ setPage }) => {
     try {
       await axios.post(`http://localhost:5001/api/bookings/${bookingId}/rent`);
       alert('Booking rented!');
-      fetchBookings(hotelID);
+      fetchBookings(localHotelId);
     } catch (error) {
       console.error('Error renting:', error);
       alert('Failed to rent booking.');
@@ -62,7 +64,7 @@ const MainPageEmployee = ({ setPage }) => {
 
       if (response.ok) {
         alert("Booking deleted");
-        fetchBookings(hotelID);
+        fetchBookings(localHotelId);
       } else {
         alert("Failed to delete booking: " + data.message);
       }
@@ -72,13 +74,60 @@ const MainPageEmployee = ({ setPage }) => {
     }
   };
 
+  const handleGoToRooms = () => {
+    setPage('hotelroom');
+  };
+
+  const handleSaveCustomerId = async () => {
+    if (customerId.trim() === '') {
+      alert('Customer ID cannot be empty');
+      return;
+    }
+  
+    try {
+      const response = await axios.get(`http://localhost:5001/api/customer/cust_id/${customerId}`);
+      if (response.data.exists) {
+        localStorage.setItem('cust_id', customerId);
+        alert(`Customer ID ${customerId} saved`);
+      } else {
+        alert(`Customer ID ${customerId} does not exist in the system`);
+      }
+    } catch (error) {
+      console.error("Error checking customer ID:", error);
+      alert("Failed to validate customer ID.");
+    }
+  };
+  
+
   return (
     <div className="main-page">
       <h1>Employee Booking Portal</h1>
+      <h2>Book For Customer</h2>
 
+      {/* Top Bar: Customer ID input + Save + Go to Hotel Rooms */}
+      <div className="top-bar" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+        <input
+          type="text"
+          value={customerId}
+          onChange={(e) => setCustomerId(e.target.value)}
+          placeholder="Enter Customer ID"
+          className="customer-id-field"
+          style={{ padding: '0.5rem', borderRadius: '4px' }}
+        />
+        <button onClick={handleSaveCustomerId}>Save Customer ID</button>
+        <button
+          onClick={handleGoToRooms}
+          className="go-to-rooms-button"
+          disabled={!localHotelId}
+        >
+          Go to Hotel Rooms
+        </button>
+      </div>
+
+      {/* Booking List Section */}
       <h2>Manage Bookings</h2>
       <div className="booking-list">
-        {hotelID ? (
+        {localHotelId ? (
           bookings.length > 0 ? (
             <ul>
               {bookings.map(booking => (
@@ -98,19 +147,9 @@ const MainPageEmployee = ({ setPage }) => {
           <p>Loading hotel data...</p>
         )}
       </div>
-
-      <div className="navigate-button-wrapper" style={{ marginTop: '2rem' }}>
-        <h2 className="text-xl font-semibold mb-2">Make a Booking</h2>
-        <button
-          onClick={() => setPage('hotelroom')}
-          className="go-to-rooms-button"
-          disabled={!hotelID}
-        >
-          Go to Hotel Rooms
-        </button>
-      </div>
     </div>
   );
 };
 
 export default MainPageEmployee;
+

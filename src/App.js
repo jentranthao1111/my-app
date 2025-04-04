@@ -24,7 +24,7 @@ function App() {
         {page === 'login' && <Login setPage={setPage} />}
         {page === 'signup' && <SignUp setPage={setPage} />} 
         {page === 'mainpageuser' && <MainPageUser setPage={setPage} />}
-        {page === 'mainpageemployee' && <MainPageEmployee setPage={setPage} />}
+        {page === 'mainpageemployee' && <MainPageEmployee setPage={setPage} setSelectedHotelId={setSelectedHotelId} />}
         {page === 'booking' && <BookingPage setPage={setPage} />}
         {page === 'hotelroom' && <HotelRoom setPage={setPage} hotelId={selectedHotelId} />}
         {page === 'hotelsearch' && <HotelSearch setPage={setPage} setSelectedHotelId={setSelectedHotelId} />}

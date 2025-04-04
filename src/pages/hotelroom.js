@@ -5,7 +5,8 @@ const HotelRooms = ({ setPage, hotelId }) => {
   const [hotelName, setHotelName] = useState('Loading hotel...');
   const checkInDate = localStorage.getItem('checkInDate') || '';
   const checkOutDate = localStorage.getItem('checkOutDate') || '';
-
+  
+  
   useEffect(() => {
     if (!hotelId) {
       console.error('Hotel ID not provided.');

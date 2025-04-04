@@ -98,6 +98,25 @@ router.put("/customer/email", async(req, res)=>{
     }
 })
 
-//
+// Validate Customer ID exists
+router.get("/customer/cust_id/:cust_id", async (req, res) => {
+    const { cust_id } = req.params;
+
+    try {
+        const result = await db.query(
+            "SELECT 1 FROM customer WHERE cust_id = $1",
+            [cust_id]
+        );
+
+        if (result.rows.length > 0) {
+            res.status(200).json({ exists: true });
+        } else {
+            res.status(200).json({ exists: false });
+        }
+    } catch (err) {
+        console.error("Error validating customer ID:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
 
 module.exports = router;
