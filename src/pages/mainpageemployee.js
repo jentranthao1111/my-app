@@ -83,9 +83,6 @@ const MainPageEmployee = ({ setPage }) => { // Accept setPage as a prop
       </form>
 
       <div className="book-room-section">
-        <button onClick={() => setPage('home')} className="back-button">
-          Back to Home
-        </button>
       </div>
     </div>
   );
